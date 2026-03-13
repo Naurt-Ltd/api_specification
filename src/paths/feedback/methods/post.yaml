@@ -1,0 +1,60 @@
+tags: ["Feedback"]
+summary: Post
+description: |
+  Submit feedback to Naurt for address, parking location, or door location data.
+
+  This endpoint can be used to:
+  - suggest corrections to existing Naurt address data
+  - suggest improved parking locations
+  - suggest improved door locations
+  - provide new address records where parking or door data is not yet available
+
+  A valid API key is required. Feedback submissions do not count against API usage.
+operationId: feedback/post
+security:
+  - ApiKeyAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "./../../../components/schemas/feedback/feedback-request.yaml"
+      examples:
+        address_with_door:
+          summary: New address with door location
+          value:
+            queries:
+              - address_string: "Flat A, 49 Upper Tulse Hill, London, SW2 2SQ"
+                door_location:
+                  latitude: 51.448
+                  longitude: -0.119
+        mixed_batch:
+          summary: Mixed address and ID feedback
+          value:
+            queries:
+              - address_string: "Flat A, 49 Upper Tulse Hill, London, SW2 2SQ"
+                door_location:
+                  latitude: 51.448
+                  longitude: -0.119
+                parking_location:
+                  latitude: 51.45
+                  longitude: -0.12
+              - id: "198a66f9-68f4-3f60-8d12-4c7ca4100efc"
+                parking_location:
+                  latitude: 51.45
+                  longitude: -0.12
+responses:
+  "200":
+    description: Feedback accepted successfully
+    content:
+      application/json:
+        schema:
+          $ref: "./../../../components/schemas/feedback/feedback-response.yaml"
+        example:
+          success: true
+  "400":
+    description: Bad request
+  "401":
+    description: Missing or invalid API key
+  "500":
+    description: Internal server error

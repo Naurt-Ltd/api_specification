@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Existing Naurt ID for the address being updated
+  address_string:
+    type: string
+    description: |
+      Address text for a new feedback item. Address strings are not matched
+      with current data, so existing addresses should use `id` instead.
+  parking_location:
+    $ref: "./location.yaml"
+  door_location:
+    $ref: "./location.yaml"
+additionalProperties: false
+allOf:
+  - oneOf:
+      - required: [id]
+      - required: [address_string]
+  - not:
+      required: [id, address_string]
+  - anyOf:
+      - required: [parking_location]
+      - required: [door_location]

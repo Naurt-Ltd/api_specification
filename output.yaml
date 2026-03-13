@@ -1,0 +1,998 @@
+openapi: 3.1.1
+info:
+  title: Naurt API
+  version: v2.6.10
+  description: |
+    OpenAPI specification for Naurt's APIs.
+servers:
+  - url: https://api.naurt.net
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Final Destination
+  - name: Meta
+paths:
+  /final-destination/v2:
+    options:
+      tags:
+        - Final Destination
+      operationId: finaldestination/options
+      summary: Options
+      responses:
+        '200':
+          description: Endpoint metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/options-response'
+    post:
+      tags:
+        - Final Destination
+      operationId: finaldestination/post
+      summary: Post
+      description: |
+        Query the Naurt Final Destination dataset to retrieve precise destination
+        locations for addresses, buildings, entrances, and parking locations.
+
+        Each request contains one or more `queries`. A query can represent several
+        different search types supported by the Final Destination API:
+
+        • Forward geocoding — supply an `address_string` or `address_structured`  
+        • Reverse geocoding — supply a `location` with latitude and longitude  
+        • Naurt ID lookup — supply an `id` returned from a previous query  
+        • Source ID lookup — supply identifiers such as `os_uprn`  
+
+        The API returns a best match for each query along with optional additional
+        matches. Results may include multiple destination geometries such as building
+        entrances, delivery doors, or parking locations depending on available data.
+
+        The geometry format returned by the API is controlled by `options.geojson_type`:
+
+        • `geojson` (default) — results are returned as standard GeoJSON
+          FeatureCollections with geometries and properties.
+
+        • `key_value` — results are returned as a simplified key/value representation
+          where each destination type contains latitude and longitude coordinates.
+
+        Each query result includes a status, the best match, optional additional
+        matches, and metadata such as distance from the search location when
+        applicable.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v2-request'
+            examples:
+              forward_geocode:
+                value:
+                  queries:
+                    - address_string: 32 Thames St, Windsor SL4 1PS
+                      country: GB
+              reverse_geocode:
+                value:
+                  queries:
+                    - location:
+                        latitude: 50.542
+                        longitude: 0.234
+                        distance_filter: 5000
+              structured_geocode:
+                value:
+                  queries:
+                    - address_structured:
+                        street_number: '25'
+                        street_name: Lower Way
+                        city: Thatcham
+                        postalcode: RG19 3RR
+                      country: GB
+                  options:
+                    structured_response: true
+              id_lookup:
+                value:
+                  queries:
+                    - id: c56dbebb-c7ab-ede2-a7ac-f84e57d1878d
+              source_id_lookup:
+                value:
+                  queries:
+                    - source_id:
+                        os_uprn: '200001191298'
+                  options:
+                    source_id:
+                      os_uprn: true
+              key_value_response:
+                value:
+                  queries:
+                    - address_string: 32 Thames St, Windsor SL4 1PS
+                  options:
+                    geojson_type: key_value
+      responses:
+        '200':
+          description: Successful lookup
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/v2-response-feature-collection-style'
+                  - $ref: '#/components/schemas/v2-response-key-value-style'
+              examples:
+                feature_collection:
+                  value:
+                    request_id: 96becf25-e233-4f9c-a05c-4bed90190bdd
+                    version: v2
+                    responses:
+                      - status: ok
+                        best_match:
+                          id: c56dbebb-c7ab-ede2-a7ac-f84e57d1878d
+                          address: 11600 NW 14th St, Hollywood, FL 33026-2568, United States
+                          geojson:
+                            type: FeatureCollection
+                            features:
+                              - type: Feature
+                                geometry:
+                                  type: Point
+                                  coordinates:
+                                    - -80.305321
+                                    - 26.019775
+                                properties:
+                                  naurt_type: basic_geocode
+                        additional_matches: []
+                key_value:
+                  value:
+                    request_id: 96becf25-e233-4f9c-a05c-4bed90190bdd
+                    version: v2
+                    responses:
+                      - status: ok
+                        best_match:
+                          id: c56dbebb-c7ab-ede2-a7ac-f84e57d1878d
+                          address: 11600 NW 14th St, Hollywood, FL 33026-2568, United States
+                          geojson:
+                            basic_geocode:
+                              latitude: 26.019775
+                              longitude: -80.305321
+                        additional_matches: []
+        4XX:
+          description: Bad request or validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+        5XX:
+          description: Internal server errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error-response'
+  /rendezvous/v1:
+    options:
+      tags:
+        - Rendezvous
+      summary: Options
+      description: |
+        Returns the current API version and any deprecated versions.
+      operationId: rendezvous/options
+      responses:
+        '200':
+          description: Endpoint metadata
+          headers:
+            allow:
+              description: Allowed request methods
+              schema:
+                type: string
+                example: POST
+            Content-Type:
+              description: Response content type
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/options-response'
+    post:
+      tags:
+        - Rendezvous
+      summary: Post
+      description: |
+        Rendezvous takes a list of queries, finds delivery clusters, and returns
+        cluster centres plus the covered addresses for each cluster.
+
+        This is not a routing tool. It does not provide delivery order or route
+        optimisation.
+      operationId: rendezvous/post
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/rendezvous-request'
+            examples:
+              address_batch:
+                summary: Example address batch
+                value:
+                  queries:
+                    - address_string: 18a, Montague Place, Brighton, BN2 1JE, United Kingdom
+                    - address_string: Flat 9, Montague Court, Montague Street, Brighton, BN2 1NQ, United Kingdom
+                    - address_string: 28 Hereford Street, Brighton, BN2 1JT, United Kingdom
+                    - address_string: 4378twbv5934wy 9q87v3ncyq9nv eriyuib4478twtvwbeihsecfonreniren vt9nhyutrevuhtvnuhitr
+                    - address_string: 27 Hereford Street, Brighton, BN2 1JT, United Kingdom
+                    - address_string: 28 Essex Street, Brighton, BN2 1JW, United Kingdom
+                    - address_string: Flat 31, Martlet Court, Hereford Street, Brighton, BN2 1LQ, United Kingdom
+      responses:
+        '200':
+          description: Successful clustering response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rendezvous-response'
+        '400':
+          description: Bad request
+        '401':
+          description: Missing or invalid API key
+        '500':
+          description: Internal server error
+  /feedback/v2:
+    options:
+      tags:
+        - Feedback
+      operationId: feedback/options
+      summary: Options
+      responses:
+        '200':
+          description: Endpoint metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/options-response'
+    post:
+      tags:
+        - Feedback
+      summary: Post
+      description: |
+        Submit feedback to Naurt for address, parking location, or door location data.
+
+        This endpoint can be used to:
+        - suggest corrections to existing Naurt address data
+        - suggest improved parking locations
+        - suggest improved door locations
+        - provide new address records where parking or door data is not yet available
+
+        A valid API key is required. Feedback submissions do not count against API usage.
+      operationId: feedback/post
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/feedback-request'
+            examples:
+              address_with_door:
+                summary: New address with door location
+                value:
+                  queries:
+                    - address_string: Flat A, 49 Upper Tulse Hill, London, SW2 2SQ
+                      door_location:
+                        latitude: 51.448
+                        longitude: -0.119
+              mixed_batch:
+                summary: Mixed address and ID feedback
+                value:
+                  queries:
+                    - address_string: Flat A, 49 Upper Tulse Hill, London, SW2 2SQ
+                      door_location:
+                        latitude: 51.448
+                        longitude: -0.119
+                      parking_location:
+                        latitude: 51.45
+                        longitude: -0.12
+                    - id: 198a66f9-68f4-3f60-8d12-4c7ca4100efc
+                      parking_location:
+                        latitude: 51.45
+                        longitude: -0.12
+      responses:
+        '200':
+          description: Feedback accepted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/feedback-response'
+              example:
+                success: true
+        '400':
+          description: Bad request
+        '401':
+          description: Missing or invalid API key
+        '500':
+          description: Internal server error
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Authenticate using your Naurt API key.
+
+        Send the raw API key in the `Authorization` header.
+        Do not prefix it with `Bearer`.
+
+        Example:
+        `Authorization: nk_your_api_key_here`
+  schemas:
+    structured-address:
+      type: object
+      additionalProperties: false
+      properties:
+        unit:
+          type: string
+        house_name:
+          type: string
+        street_number:
+          type: string
+        street_name:
+          type: string
+        locality:
+          type: string
+        city:
+          type: string
+        county:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        postalcode:
+          type: string
+    v2-location:
+      type: object
+      additionalProperties: false
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          exclusiveMaximum: 180
+        distance_filter:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 25000
+          default: 5000
+    country:
+      type: string
+      enum:
+        - AE
+        - AU
+        - AT
+        - BE
+        - BR
+        - CA
+        - CH
+        - CZ
+        - DE
+        - EG
+        - ES
+        - FI
+        - FR
+        - GB
+        - GG
+        - HK
+        - IE
+        - IM
+        - IT
+        - JE
+        - JP
+        - KR
+        - LU
+        - NL
+        - 'NO'
+        - NZ
+        - PL
+        - PT
+        - SA
+        - SE
+        - SI
+        - SG
+        - TW
+        - US
+        - UK
+        - ZA
+    v2-source-search:
+      type: object
+      additionalProperties: false
+      properties:
+        os_uprn:
+          type: string
+        os_udprn:
+          type: string
+    language:
+      type: string
+      enum:
+        - Auto
+        - EN
+        - AR
+        - JA
+        - FR
+        - DE
+        - IT
+        - PT
+        - KO
+        - ZH
+        - NL
+        - 'NO'
+        - FI
+        - PL
+        - SL
+        - CZ
+      default: Auto
+    v2-query:
+      type: object
+      additionalProperties: false
+      properties:
+        address_string:
+          type: string
+        address_structured:
+          $ref: '#/components/schemas/structured-address'
+        location:
+          $ref: '#/components/schemas/v2-location'
+        id:
+          type: string
+          format: uuid
+        country:
+          $ref: '#/components/schemas/country'
+        source_id:
+          $ref: '#/components/schemas/v2-source-search'
+        additional_matches:
+          type: boolean
+          default: false
+        language:
+          $ref: '#/components/schemas/language'
+      description: |
+        A single search query. It can be used to either lookup a door and parking spot by:
+        - Address
+        - Location
+        - Naurt ID
+        - Source Address ID (E.g, OS UPRN)
+    geojson-type:
+      type: string
+      enum:
+        - geojson
+        - key_value
+      default: geojson
+    input-filter:
+      type: string
+      enum:
+        - none
+        - loose
+        - strict
+      default: loose
+    v2-options:
+      type: object
+      additionalProperties: false
+      properties:
+        pretty_print:
+          type: boolean
+          default: false
+        verbose:
+          type: boolean
+          default: false
+        structured_response:
+          type: boolean
+          default: false
+        geojson_type:
+          $ref: '#/components/schemas/geojson-type'
+        return_original:
+          type: boolean
+          default: false
+        input_filter:
+          $ref: '#/components/schemas/input-filter'
+    v2-request:
+      type: object
+      additionalProperties: false
+      required:
+        - queries
+      properties:
+        queries:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/v2-query'
+        options:
+          $ref: '#/components/schemas/v2-options'
+    point:
+      type: object
+      required:
+        - coordinates
+        - type
+      properties:
+        coordinates:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            type: number
+            format: double
+        type:
+          type: string
+          enum:
+            - Point
+    multipoint:
+      type: object
+      properties:
+        coordinates:
+          type: array
+          items:
+            type: array
+            minItems: 2
+            maxItems: 2
+            items:
+              type: number
+              format: double
+        type:
+          type: string
+          enum:
+            - MultiPoint
+    polygon:
+      type: object
+      properties:
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: array
+              minItems: 2
+              maxItems: 2
+              items:
+                type: number
+                format: double
+        type:
+          type: string
+          enum:
+            - Polygon
+      required:
+        - coordinates
+        - type
+    accuracy:
+      type: object
+      required:
+        - quality
+      properties:
+        quality:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+    feature-properties:
+      type: object
+      required:
+        - naurt_type
+      properties:
+        naurt_type:
+          type: string
+          enum:
+            - basic_geocode
+            - naurt_door
+            - naurt_building
+            - naurt_parking
+        accuracy:
+          $ref: '#/components/schemas/accuracy'
+        minimum_parking_to_door_distance:
+          type: number
+          format: double
+    feature:
+      type: object
+      required:
+        - geometry
+        - properties
+        - type
+      properties:
+        geometry:
+          oneOf:
+            - $ref: '#/components/schemas/point'
+            - $ref: '#/components/schemas/multipoint'
+            - $ref: '#/components/schemas/polygon'
+        properties:
+          $ref: '#/components/schemas/feature-properties'
+        type:
+          type: string
+          enum:
+            - Feature
+    feature-collection:
+      type: object
+      required:
+        - type
+        - features
+      properties:
+        features:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/feature'
+        type:
+          type: string
+          enum:
+            - FeatureCollection
+          default: FeatureCollection
+    v2-source-id-response:
+      type: object
+      additionalProperties: false
+      properties:
+        os_uprn:
+          oneOf:
+            - type: string
+            - type: 'null'
+    v2-poi-response-feature-collection-style:
+      type: object
+      title: Feature Collection Style
+      additionalProperties: false
+      required:
+        - id
+        - address
+        - geojson
+      properties:
+        id:
+          type: string
+          format: uuid
+        address:
+          type: string
+        geojson:
+          $ref: '#/components/schemas/feature-collection'
+        distance:
+          type: number
+        search_confidence:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+        structured_response:
+          $ref: '#/components/schemas/structured-address'
+        source_id:
+          $ref: '#/components/schemas/v2-source-id-response'
+    v2-status:
+      type: string
+      enum:
+        - ok
+        - no_matches
+    v2-search-response-feature-collection-style:
+      type: object
+      additionalProperties: false
+      required:
+        - best_match
+        - additional_matches
+        - status
+      properties:
+        best_match:
+          oneOf:
+            - $ref: '#/components/schemas/v2-poi-response-feature-collection-style'
+            - type: 'null'
+        additional_matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/v2-poi-response-feature-collection-style'
+        status:
+          $ref: '#/components/schemas/v2-status'
+        original_request:
+          oneOf:
+            - $ref: '#/components/schemas/v2-query'
+            - type: 'null'
+    v2-logging:
+      type: object
+      additionalProperties: false
+      properties:
+        info:
+          type: array
+          items:
+            type: string
+        warnings:
+          type: array
+          items:
+            type: string
+        errors:
+          type: array
+          items:
+            type: string
+    v2-response-feature-collection-style:
+      type: object
+      additionalProperties: false
+      required:
+        - responses
+        - version
+        - request_id
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/v2-search-response-feature-collection-style'
+        logging:
+          $ref: '#/components/schemas/v2-logging'
+        version:
+          type: string
+        request_id:
+          type: string
+          format: uuid
+    v2-poi-response-key-value-style:
+      type: object
+      title: Key Value Style
+      additionalProperties: false
+      required:
+        - id
+        - address
+        - geojson
+      properties:
+        id:
+          type: string
+          format: uuid
+        address:
+          type: string
+        geojson:
+          type: object
+          properties:
+            building:
+              $ref: '#/components/schemas/polygon'
+            default_geocode:
+              $ref: '#/components/schemas/point'
+            entrance:
+              $ref: '#/components/schemas/multipoint'
+            parking:
+              $ref: '#/components/schemas/polygon'
+        distance:
+          type: number
+          format: double
+        search_confidence:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+        structured_response:
+          $ref: '#/components/schemas/structured-address'
+        source_id:
+          $ref: '#/components/schemas/v2-source-id-response'
+    v2-search-response-key-value-style:
+      type: object
+      additionalProperties: false
+      required:
+        - best_match
+        - additional_matches
+        - status
+      properties:
+        best_match:
+          oneOf:
+            - $ref: '#/components/schemas/v2-poi-response-key-value-style'
+            - type: 'null'
+        additional_matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/v2-poi-response-key-value-style'
+        status:
+          $ref: '#/components/schemas/v2-status'
+        original_request:
+          oneOf:
+            - $ref: '#/components/schemas/v2-query'
+            - type: 'null'
+    v2-response-key-value-style:
+      type: object
+      additionalProperties: false
+      required:
+        - responses
+        - version
+        - request_id
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/v2-search-response-key-value-style'
+        logging:
+          $ref: '#/components/schemas/v2-logging'
+        version:
+          type: string
+        request_id:
+          type: string
+          format: uuid
+    error-response:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - reason
+        - remediation
+      properties:
+        code:
+          type: string
+        reason:
+          type: string
+        remediation:
+          type: string
+    options-response:
+      type: object
+      additionalProperties: false
+      required:
+        - current_version
+        - deprecated_versions
+      properties:
+        current_version:
+          type: string
+        deprecated_versions:
+          type: array
+          items:
+            type: string
+    rendezvous-query:
+      type: object
+      description: |
+        Shared Naurt Query object.
+
+        The Rendezvous spec refers to the shared Search Query specification.
+        At minimum, address-based queries such as `address_string` are supported.
+        Other shared query forms may also be accepted.
+      properties:
+        address_string:
+          type: string
+          description: Free-form address query string
+        latitude:
+          type: number
+        longitude:
+          type: number
+      additionalProperties: true
+      example:
+        address_string: 18a, Montague Place, Brighton, BN2 1JE, United Kingdom
+    rendezvous-options:
+      type: object
+      description: Optional Rendezvous request options
+      additionalProperties: true
+    rendezvous-request:
+      type: object
+      required:
+        - queries
+      properties:
+        queries:
+          type: array
+          maxItems: 200
+          description: |
+            List of Query objects. The Query object is shared across Naurt APIs.
+            Different query types may be mixed in the same request.
+          items:
+            $ref: '#/components/schemas/rendezvous-query'
+        options:
+          $ref: '#/components/schemas/rendezvous-options'
+      additionalProperties: false
+    rendezvous-hit-data:
+      type: object
+      required:
+        - id
+        - address
+        - geojson
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+          description: Normalised address; may differ from the searched address
+        geojson:
+          $ref: '#/components/schemas/feature-collection'
+        distance:
+          type:
+            - number
+            - 'null'
+          format: float
+          description: |
+            Distance in metres from the searched latitude/longitude.
+            Present only when searching with latitude and longitude.
+      additionalProperties: false
+    rendezvous-hit:
+      type: object
+      required:
+        - centre
+        - covers
+      properties:
+        centre:
+          $ref: '#/components/schemas/rendezvous-hit-data'
+        covers:
+          type: array
+          items:
+            $ref: '#/components/schemas/rendezvous-hit-data'
+      additionalProperties: false
+    rendezvous-response:
+      type: object
+      required:
+        - responses
+        - unmatched
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/rendezvous-hit'
+        unmatched:
+          type: array
+          description: Queries that could not be matched
+          items:
+            $ref: '#/components/schemas/rendezvous-query'
+        version:
+          type:
+            - string
+            - 'null'
+          description: API version used to service the request
+        request_id:
+          type:
+            - string
+            - 'null'
+          description: |
+            Request identifier useful when reporting issues to Naurt.
+            Mentioned in the prose docs, though not shown in the response shape block.
+      additionalProperties: false
+    location:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+      additionalProperties: false
+    feedback-query:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Existing Naurt ID for the address being updated
+        address_string:
+          type: string
+          description: |
+            Address text for a new feedback item. Address strings are not matched
+            with current data, so existing addresses should use `id` instead.
+        parking_location:
+          $ref: '#/components/schemas/location'
+        door_location:
+          $ref: '#/components/schemas/location'
+      additionalProperties: false
+      allOf:
+        - oneOf:
+            - required:
+                - id
+            - required:
+                - address_string
+        - not:
+            required:
+              - id
+              - address_string
+        - anyOf:
+            - required:
+                - parking_location
+            - required:
+                - door_location
+    feedback-request:
+      type: object
+      required:
+        - queries
+      properties:
+        queries:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/feedback-query'
+      additionalProperties: false
+    feedback-response:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          const: true
+          description: Confirms that Naurt received the suggestion
+      additionalProperties: false

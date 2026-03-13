@@ -1,0 +1,42 @@
+tags: [Rendezvous]
+summary: Post
+description: |
+  Rendezvous takes a list of queries, finds delivery clusters, and returns
+  cluster centres plus the covered addresses for each cluster.
+
+  This is not a routing tool. It does not provide delivery order or route
+  optimisation.
+operationId: rendezvous/post
+security:
+  - ApiKeyAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "./../../../components/schemas/rendezvous/rendezvous-request.yaml"
+      examples:
+        address_batch:
+          summary: Example address batch
+          value:
+            queries:
+              - address_string: "18a, Montague Place, Brighton, BN2 1JE, United Kingdom"
+              - address_string: "Flat 9, Montague Court, Montague Street, Brighton, BN2 1NQ, United Kingdom"
+              - address_string: "28 Hereford Street, Brighton, BN2 1JT, United Kingdom"
+              - address_string: "4378twbv5934wy 9q87v3ncyq9nv eriyuib4478twtvwbeihsecfonreniren vt9nhyutrevuhtvnuhitr"
+              - address_string: "27 Hereford Street, Brighton, BN2 1JT, United Kingdom"
+              - address_string: "28 Essex Street, Brighton, BN2 1JW, United Kingdom"
+              - address_string: "Flat 31, Martlet Court, Hereford Street, Brighton, BN2 1LQ, United Kingdom"
+responses:
+  "200":
+    description: Successful clustering response
+    content:
+      application/json:
+        schema:
+          $ref: "./../../../components/schemas/rendezvous/rendezvous-response.yaml"
+  "400":
+    description: Bad request
+  "401":
+    description: Missing or invalid API key
+  "500":
+    description: Internal server error

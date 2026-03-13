@@ -1,0 +1,16 @@
+type: object
+required:
+  - geometry
+  - properties
+  - type
+properties:
+  geometry:
+    oneOf:
+      - $ref: "./point.yaml"
+      - $ref: "./multipoint.yaml"
+      - $ref: "./polygon.yaml"
+  properties:
+    $ref: "./feature-properties.yaml"
+  type:
+    type: string
+    enum: [Feature]

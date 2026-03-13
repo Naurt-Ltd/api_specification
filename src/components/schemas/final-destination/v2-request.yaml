@@ -1,0 +1,13 @@
+type: object
+additionalProperties: false
+required:
+  - queries
+properties:
+  queries:
+    type: array
+    minItems: 1
+    maxItems: 200
+    items:
+      $ref: "./v2-query.yaml"
+  options:
+    $ref: "./v2-options.yaml"

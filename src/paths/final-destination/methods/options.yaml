@@ -1,0 +1,10 @@
+tags: [Final Destination]
+operationId: finaldestination/options
+summary: Options
+responses:
+  "200":
+    description: Endpoint metadata
+    content:
+      application/json:
+        schema:
+          $ref: "./../../../components/schemas/general/options-response.yaml"

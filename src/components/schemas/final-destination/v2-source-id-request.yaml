@@ -1,0 +1,6 @@
+type: object
+additionalProperties: false
+properties:
+  os_uprn:
+    type: boolean
+    default: false

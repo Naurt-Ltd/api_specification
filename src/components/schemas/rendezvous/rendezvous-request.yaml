@@ -1,0 +1,15 @@
+type: object
+required:
+  - queries
+properties:
+  queries:
+    type: array
+    maxItems: 200
+    description: |
+      List of Query objects. The Query object is shared across Naurt APIs.
+      Different query types may be mixed in the same request.
+    items:
+      $ref: "./rendezvous-query.yaml"
+  options:
+    $ref: "./rendezvous-options.yaml"
+additionalProperties: false

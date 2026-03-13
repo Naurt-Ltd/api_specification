@@ -1,0 +1,18 @@
+type: object
+additionalProperties: false
+required:
+  - responses
+  - version
+  - request_id
+properties:
+  responses:
+    type: array
+    items:
+      $ref: "./v2-search-response-feature-collection-style.yaml"
+  logging:
+    $ref: "./v2-logging.yaml"
+  version:
+    type: string
+  request_id:
+    type: string
+    format: uuid

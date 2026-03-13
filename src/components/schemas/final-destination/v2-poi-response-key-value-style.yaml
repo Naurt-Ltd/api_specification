@@ -1,0 +1,36 @@
+type: object
+title: Key Value Style
+additionalProperties: false
+required:
+  - id
+  - address
+  - geojson
+properties:
+  id:
+    type: string
+    format: uuid
+  address:
+    type: string
+  geojson:
+    type: object
+    properties:
+      building:
+        $ref: "./../general/geojson/polygon.yaml"
+      default_geocode:
+        $ref: "./../general/geojson/point.yaml"
+      entrance:
+        $ref: "./../general/geojson/multipoint.yaml"
+      parking:
+        $ref: "./../general/geojson/polygon.yaml"
+  distance:
+    type: number
+    format: double
+  search_confidence:
+    type: number
+    format: double
+    minimum: 0.0
+    maximum: 1.0
+  structured_response:
+    $ref: "./../general/structured-address.yaml"
+  source_id:
+    $ref: "./v2-source-id-response.yaml"

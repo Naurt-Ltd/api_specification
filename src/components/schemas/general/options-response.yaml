@@ -1,0 +1,12 @@
+type: object
+additionalProperties: false
+required:
+  - current_version
+  - deprecated_versions
+properties:
+  current_version:
+    type: string
+  deprecated_versions:
+    type: array
+    items:
+      type: string

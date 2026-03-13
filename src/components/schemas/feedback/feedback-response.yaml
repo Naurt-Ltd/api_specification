@@ -1,0 +1,9 @@
+type: object
+required:
+  - success
+properties:
+  success:
+    type: boolean
+    const: true
+    description: Confirms that Naurt received the suggestion
+additionalProperties: false

@@ -1,0 +1,18 @@
+type: object
+additionalProperties: false
+required: [best_match, additional_matches, status]
+properties:
+  best_match:
+    oneOf:
+      - $ref: "./v2-poi-response-key-value-style.yaml"
+      - type: "null"
+  additional_matches:
+    type: array
+    items:
+      $ref: "./v2-poi-response-key-value-style.yaml"
+  status:
+    $ref: "./v2-status.yaml"
+  original_request:
+    oneOf:
+      - $ref: "./v2-query.yaml"
+      - type: "null"

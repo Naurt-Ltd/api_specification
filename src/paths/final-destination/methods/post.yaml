@@ -1,0 +1,136 @@
+tags: [Final Destination]
+operationId: finaldestination/post
+summary: Post
+description: |
+  Query the Naurt Final Destination dataset to retrieve precise destination
+  locations for addresses, buildings, entrances, and parking locations.
+
+  Each request contains one or more `queries`. A query can represent several
+  different search types supported by the Final Destination API:
+
+  • Forward geocoding — supply an `address_string` or `address_structured`  
+  • Reverse geocoding — supply a `location` with latitude and longitude  
+  • Naurt ID lookup — supply an `id` returned from a previous query  
+  • Source ID lookup — supply identifiers such as `os_uprn`  
+
+  The API returns a best match for each query along with optional additional
+  matches. Results may include multiple destination geometries such as building
+  entrances, delivery doors, or parking locations depending on available data.
+
+  The geometry format returned by the API is controlled by `options.geojson_type`:
+
+  • `geojson` (default) — results are returned as standard GeoJSON
+    FeatureCollections with geometries and properties.
+
+  • `key_value` — results are returned as a simplified key/value representation
+    where each destination type contains latitude and longitude coordinates.
+
+  Each query result includes a status, the best match, optional additional
+  matches, and metadata such as distance from the search location when
+  applicable.
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: "./../../../components/schemas/final-destination/v2-request.yaml"
+      examples:
+        forward_geocode:
+          value:
+            queries:
+              - address_string: "32 Thames St, Windsor SL4 1PS"
+                country: "GB"
+        reverse_geocode:
+          value:
+            queries:
+              - location:
+                  latitude: 50.542
+                  longitude: 0.234
+                  distance_filter: 5000
+        structured_geocode:
+          value:
+            queries:
+              - address_structured:
+                  street_number: "25"
+                  street_name: "Lower Way"
+                  city: "Thatcham"
+                  postalcode: "RG19 3RR"
+                country: "GB"
+            options:
+              structured_response: true
+        id_lookup:
+          value:
+            queries:
+              - id: "c56dbebb-c7ab-ede2-a7ac-f84e57d1878d"
+        source_id_lookup:
+          value:
+            queries:
+              - source_id:
+                  os_uprn: "200001191298"
+            options:
+              source_id:
+                os_uprn: true
+        key_value_response:
+          value:
+            queries:
+              - address_string: "32 Thames St, Windsor SL4 1PS"
+            options:
+              geojson_type: key_value
+
+responses:
+  "200":
+    description: Successful lookup
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: "./../../../components/schemas/final-destination/v2-response-feature-collection-style.yaml"
+            - $ref: "./../../../components/schemas/final-destination/v2-response-key-value-style.yaml"
+        examples:
+          feature_collection:
+            value:
+              request_id: "96becf25-e233-4f9c-a05c-4bed90190bdd"
+              version: "v2"
+              responses:
+                - status: ok
+                  best_match:
+                    id: "c56dbebb-c7ab-ede2-a7ac-f84e57d1878d"
+                    address: "11600 NW 14th St, Hollywood, FL 33026-2568, United States"
+                    geojson:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [-80.305321, 26.019775]
+                          properties:
+                            naurt_type: basic_geocode
+                  additional_matches: []
+          key_value:
+            value:
+              request_id: "96becf25-e233-4f9c-a05c-4bed90190bdd"
+              version: "v2"
+              responses:
+                - status: ok
+                  best_match:
+                    id: "c56dbebb-c7ab-ede2-a7ac-f84e57d1878d"
+                    address: "11600 NW 14th St, Hollywood, FL 33026-2568, United States"
+                    geojson:
+                      basic_geocode:
+                        latitude: 26.019775
+                        longitude: -80.305321
+                  additional_matches: []
+
+  "4XX":
+    description: Bad request or validation errors
+    content:
+      application/json:
+        schema:
+          $ref: "./../../../components/schemas/general/error-response.yaml"
+
+  "5XX":
+    description: Internal server errors
+    content:
+      application/json:
+        schema:
+          $ref: "./../../../components/schemas/general/error-response.yaml"

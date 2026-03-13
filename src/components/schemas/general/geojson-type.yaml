@@ -1,0 +1,3 @@
+type: string
+enum: [geojson, key_value]
+default: geojson

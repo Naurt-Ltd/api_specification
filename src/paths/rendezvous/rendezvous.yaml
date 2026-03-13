@@ -1,0 +1,5 @@
+options:
+  $ref: ./methods/options.yaml
+
+post:
+  $ref: ./methods/post.yaml

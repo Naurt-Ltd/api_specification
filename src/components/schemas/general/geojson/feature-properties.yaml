@@ -1,0 +1,11 @@
+type: object
+required: [naurt_type]
+properties:
+  naurt_type:
+    type: string
+    enum: [basic_geocode, naurt_door, naurt_building, naurt_parking]
+  accuracy:
+    $ref: "./accuracy.yaml"
+  minimum_parking_to_door_distance:
+    type: number
+    format: double

@@ -1,0 +1,19 @@
+type: string
+enum:
+  - Auto
+  - EN
+  - AR
+  - JA
+  - FR
+  - DE
+  - IT
+  - PT
+  - KO
+  - ZH
+  - NL
+  - NO
+  - FI
+  - PL
+  - SL
+  - CZ
+default: Auto
