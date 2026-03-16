@@ -1,0 +1,10 @@
+type: object
+properties:
+  building:
+    $ref: "./polygon.yaml"
+  default_geocode:
+    $ref: "./point.yaml"
+  entrance:
+    $ref: "./multipoint.yaml"
+  parking:
+    $ref: "./polygon.yaml"

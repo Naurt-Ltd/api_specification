@@ -1,0 +1,12 @@
+type: object
+required:
+  - centre
+  - covers
+properties:
+  centre:
+    $ref: "./rendezvous-hit-data.yaml"
+  covers:
+    type: array
+    items:
+      $ref: "./rendezvous-hit-data.yaml"
+additionalProperties: false

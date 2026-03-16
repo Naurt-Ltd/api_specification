@@ -1,0 +1,13 @@
+type: object
+required: [features, type]
+properties:
+  features:
+    type: array
+    minItems: 1
+    maxItems: 4
+    items:
+      $ref: "./feature.yaml"
+  type:
+    type: string
+    enum: [FeatureCollection]
+    default: FeatureCollection

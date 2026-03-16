@@ -1,0 +1,16 @@
+type: object
+additionalProperties: false
+required: [best_match, additional_matches, status]
+properties:
+  best_match:
+    oneOf:
+      - $ref: "./hit.yaml"
+      - type: "null"
+  additional_matches:
+    type: array
+    items:
+      $ref: "./hit.yaml"
+  status:
+    $ref: "./status.yaml"
+  original_request:
+    $ref: "./../input/query.yaml"

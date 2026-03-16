@@ -1,0 +1,13 @@
+description: |
+  Confidence score in the range 0.0 to 1.0 indicating how well the result 
+  matches the query. Higher is better.
+
+  See: https://docs.naurt.com/reference/search-confidence
+
+  Not to be confused with Accuracy, which is how good the data itself is. This 
+  is about the likelihood of a good match.
+example: 0.93
+type: number
+format: double
+minimum: 0.0
+maximum: 1.0

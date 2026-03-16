@@ -1,0 +1,27 @@
+type: object
+required:
+  - responses
+  - unmatched
+properties:
+  responses:
+    type: array
+    items:
+      $ref: "./rendezvous-hit.yaml"
+  unmatched:
+    type: array
+    description: Queries that could not be matched
+    items:
+      $ref: "./rendezvous-query.yaml"
+  version:
+    type:
+      - string
+      - "null"
+    description: API version used to service the request
+  request_id:
+    type:
+      - string
+      - "null"
+    description: |
+      Request identifier useful when reporting issues to Naurt.
+      Mentioned in the prose docs, though not shown in the response shape block.
+additionalProperties: false

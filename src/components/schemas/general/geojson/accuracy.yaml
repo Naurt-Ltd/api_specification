@@ -1,0 +1,7 @@
+type: object
+required:
+  - quality
+properties:
+  quality:
+    type: string
+    enum: [low, medium, high]

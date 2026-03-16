@@ -1,0 +1,40 @@
+description: |
+  An enum representing all possible countries that Naurt currently supports
+type: string
+enum:
+  - AE
+  - AU
+  - AT
+  - BE
+  - BR
+  - CA
+  - CH
+  - CZ
+  - DE
+  - EG
+  - ES
+  - FI
+  - FR
+  - GB
+  - GG
+  - HK
+  - IE
+  - IM
+  - IT
+  - JE
+  - JP
+  - KR
+  - LU
+  - NL
+  - NO
+  - NZ
+  - PL
+  - PT
+  - SA
+  - SE
+  - SI
+  - SG
+  - TW
+  - US
+  - UK
+  - ZA

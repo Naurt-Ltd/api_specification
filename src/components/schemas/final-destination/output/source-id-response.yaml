@@ -1,0 +1,18 @@
+description: |
+  An object containing information on source IDs. Source IDs refer to underlying
+  IDs from address data sets. Currently supporting UPRN and UDPRN in the UK 
+  referring to the OrdnanceSurvey datasets
+example:
+  UPRN:
+    value:
+      os_uprn: "100062664604"
+  UDPRN:
+    value:
+      os_udprn: "25962203"
+type: object
+additionalProperties: false
+properties:
+  os_uprn:
+    type: string
+  os_udprn:
+    type: string

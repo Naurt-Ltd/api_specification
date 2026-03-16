@@ -1,0 +1,23 @@
+tags: [Rendezvous]
+summary: Options
+description: |
+  Returns the current API version and any deprecated versions.
+operationId: rendezvous-options
+responses:
+  "200":
+    description: Endpoint metadata
+    headers:
+      allow:
+        description: Allowed request methods
+        schema:
+          type: string
+          example: POST
+      Content-Type:
+        description: Response content type
+        schema:
+          type: string
+          example: application/json
+    content:
+      application/json:
+        schema:
+          $ref: "./../../../components/schemas/general/options-response.yaml"

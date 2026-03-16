@@ -1,0 +1,31 @@
+description: |
+  `options` impact all `queries` within a request
+ype: object
+additionalProperties: false
+properties:
+  pretty_print:
+    type: boolean
+    default: false
+    description: |
+      This will format the response in a more human readable way. Only
+      recommended for debug, as it increases payload size
+  verbose:
+    type: boolean
+    default: false
+    description: |
+      Returns additional debug information about request processing. Only 
+      recommended for debug, as it increases payload size
+  structured_response:
+    type: boolean
+    default: false
+    description: |
+      Adds the Naurt structured format of the address to the response
+  geojson_type:
+    $ref: "./../../general/geojson-type.yaml"
+  return_original:
+    type: boolean
+    default: false
+    description: |
+      Returns your original query back in the response
+  input_filter:
+    $ref: "./../../general/input-filter.yaml"

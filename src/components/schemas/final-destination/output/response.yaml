@@ -1,0 +1,15 @@
+type: object
+additionalProperties: false
+required: [responses, version, request_id]
+properties:
+  responses:
+    type: array
+    items:
+      $ref: "./hit.yaml"
+  logging:
+    $ref: "./logging.yaml"
+  version:
+    type: string
+  request_id:
+    type: string
+    format: uuid

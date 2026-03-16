@@ -1,0 +1,22 @@
+type: object
+required:
+  - id
+  - address
+  - geojson
+properties:
+  id:
+    type: string
+  address:
+    type: string
+    description: Normalised address; may differ from the searched address
+  geojson:
+    $ref: "./../general/geojson/feature-collection.yaml"
+  distance:
+    type:
+      - number
+      - "null"
+    format: float
+    description: |
+      Distance in metres from the searched latitude/longitude.
+      Present only when searching with latitude and longitude.
+additionalProperties: false

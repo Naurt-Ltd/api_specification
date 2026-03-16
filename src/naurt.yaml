@@ -1,0 +1,41 @@
+openapi: 3.1.1
+info:
+  title: Naurt API
+  version: v2.6.10
+  description: |
+    OpenAPI specification for Naurt's APIs.
+
+servers:
+  - url: https://api.naurt.net
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: Final Destination
+  - name: Meta
+
+paths:
+  /final-destination/v2:
+    $ref: ./paths/final-destination/final-destination.yaml
+
+  /rendezvous/v1:
+    $ref: ./paths/rendezvous/rendezvous.yaml
+
+  /feedback/v2:
+    $ref: ./paths/feedback/feedback.yaml
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Authenticate using your Naurt API key.
+
+        Send the raw API key in the `Authorization` header.
+        Do not prefix it with `Bearer`.
+
+        Example:
+        `Authorization: nk_your_api_key_here`

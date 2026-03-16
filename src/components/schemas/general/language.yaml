@@ -1,0 +1,26 @@
+description: |
+  Used for reverse geocodes only, to decide which language the response is in. 
+  In a forward geocode, the response language will match the input language.
+
+  See: https://docs.naurt.com/reference/language/ for detailed information on 
+  language availability for all countries (not all countries have alternative 
+  languages)
+type: string
+enum:
+  - Auto
+  - EN
+  - AR
+  - JA
+  - FR
+  - DE
+  - IT
+  - PT
+  - KO
+  - ZH
+  - NL
+  - NO
+  - FI
+  - PL
+  - SL
+  - CZ
+default: Auto
