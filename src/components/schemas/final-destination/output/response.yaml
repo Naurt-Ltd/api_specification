@@ -1,3 +1,6 @@
+description: |
+  A response from the API. The `responses` are in the same order as the original 
+  `queries` from the request.
 type: object
 additionalProperties: false
 required: [responses, version, request_id]
