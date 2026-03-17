@@ -33,7 +33,7 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: "./../../../components/schemas/final-destination/input/request.yaml"
+        $ref: "./../../../components/schemas/final-destination/input/final-destination-request.yaml"
       examples:
         forward_geocode:
           value:
@@ -83,7 +83,7 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "./../../../components/schemas/final-destination/output/response.yaml"
+          $ref: "./../../../components/schemas/final-destination/output/final-destination-response.yaml"
         examples:
           feature_collection:
             value:

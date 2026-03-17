@@ -6,14 +6,14 @@ properties:
   address_structured:
     $ref: "./../../general/structured-address.yaml"
   location:
-    $ref: "./location.yaml"
+    $ref: "./final-destination-location.yaml"
   id:
     type: string
     format: uuid
   country:
     $ref: ./../../general/country.yaml
   source_id:
-    $ref: "./source-id-request.yaml"
+    $ref: "./final-destination-source-id-request.yaml"
   additional_matches:
     type: boolean
     default: false

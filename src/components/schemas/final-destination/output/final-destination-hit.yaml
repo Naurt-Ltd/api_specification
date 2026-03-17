@@ -1,5 +1,5 @@
 type: object
-title: Feature Collection Style
+title: Final Destination Hit
 additionalProperties: false
 required:
   - id
@@ -18,8 +18,8 @@ properties:
   distance:
     type: number
   search_confidence:
-    $ref: "./search-confidence.yaml"
+    $ref: "./final-destination-search-confidence.yaml"
   structured_response:
     $ref: "./../../general/structured-address.yaml"
   source_id:
-    $ref: "./source-id-response.yaml"
+    $ref: "./final-destination-source-id-response.yaml"

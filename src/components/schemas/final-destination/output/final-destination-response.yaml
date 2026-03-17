@@ -8,9 +8,9 @@ properties:
   responses:
     type: array
     items:
-      $ref: "./hit.yaml"
+      $ref: "./final-destination-hits.yaml"
   logging:
-    $ref: "./logging.yaml"
+    $ref: "./final-destination-logging.yaml"
   version:
     type: string
   request_id:

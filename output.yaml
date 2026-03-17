@@ -1,7 +1,10 @@
 openapi: 3.1.1
 info:
   title: Naurt API
-  version: v2.6.10
+  version: 0.1.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
   description: |
     OpenAPI specification for Naurt's APIs.
 servers:
@@ -62,7 +65,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/request'
+              $ref: '#/components/schemas/final-destination-request'
             examples:
               forward_geocode:
                 value:
@@ -111,7 +114,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/response'
+                $ref: '#/components/schemas/final-destination-response'
               examples:
                 feature_collection:
                   value:
@@ -348,7 +351,7 @@ components:
           type: string
         postalcode:
           type: string
-    location:
+    final-destination-location:
       description: |
         A location, using WGS84 latitude and longitude.
 
@@ -416,7 +419,7 @@ components:
         - US
         - UK
         - ZA
-    source-id-request:
+    final-destination-source-id-request:
       type: object
       additionalProperties: false
       properties:
@@ -452,7 +455,7 @@ components:
         - SL
         - CZ
       default: Auto
-    query:
+    final-destination-query:
       type: object
       additionalProperties: false
       properties:
@@ -461,14 +464,14 @@ components:
         address_structured:
           $ref: '#/components/schemas/structured-address'
         location:
-          $ref: '#/components/schemas/location'
+          $ref: '#/components/schemas/final-destination-location'
         id:
           type: string
           format: uuid
         country:
           $ref: '#/components/schemas/country'
         source_id:
-          $ref: '#/components/schemas/source-id-request'
+          $ref: '#/components/schemas/final-destination-source-id-request'
         additional_matches:
           type: boolean
           default: false
@@ -511,7 +514,7 @@ components:
         - loose
         - strict
       default: loose
-    options:
+    final-destination-options:
       description: |
         `options` impact all `queries` within a request
       ype: object
@@ -543,7 +546,7 @@ components:
             Returns your original query back in the response
         input_filter:
           $ref: '#/components/schemas/input-filter'
-    request:
+    final-destination-request:
       description: |
         A single request to the API, which can contain up to 200 queries. Each query 
         is independent and can be of a different type.
@@ -557,9 +560,9 @@ components:
           minItems: 1
           maxItems: 200
           items:
-            $ref: '#/components/schemas/query'
+            $ref: '#/components/schemas/final-destination-query'
         options:
-          $ref: '#/components/schemas/options'
+          $ref: '#/components/schemas/final-destination-options'
     point:
       type: object
       required:
@@ -688,7 +691,7 @@ components:
           $ref: '#/components/schemas/multipoint'
         parking:
           $ref: '#/components/schemas/polygon'
-    search-confidence:
+    final-destination-search-confidence:
       description: |
         Confidence score in the range 0.0 to 1.0 indicating how well the result 
         matches the query. Higher is better.
@@ -702,7 +705,7 @@ components:
       format: double
       minimum: 0
       maximum: 1
-    source-id-response:
+    final-destination-source-id-response:
       description: |
         An object containing information on source IDs. Source IDs refer to underlying
         IDs from address data sets. Currently supporting UPRN and UDPRN in the UK 
@@ -721,9 +724,9 @@ components:
           type: string
         os_udprn:
           type: string
-    hit:
+    final-destination-hit:
       type: object
-      title: Feature Collection Style
+      title: Final Destination Hit
       additionalProperties: false
       required:
         - id
@@ -742,12 +745,42 @@ components:
         distance:
           type: number
         search_confidence:
-          $ref: '#/components/schemas/search-confidence'
+          $ref: '#/components/schemas/final-destination-search-confidence'
         structured_response:
           $ref: '#/components/schemas/structured-address'
         source_id:
-          $ref: '#/components/schemas/source-id-response'
-    logging:
+          $ref: '#/components/schemas/final-destination-source-id-response'
+    final-destination-status:
+      description: |
+        The `queries` and `responses` arrays are always 1:1. If no match can be found,
+        a 404 will NOT be returned. Instead, check this enum for `no_matches`. That 
+        indicates no error has happened, but nothing was found. `ok` when something is
+        found.
+      type: string
+      enum:
+        - ok
+        - no_matches
+    final-destination-hits:
+      type: object
+      additionalProperties: false
+      required:
+        - best_match
+        - additional_matches
+        - status
+      properties:
+        best_match:
+          oneOf:
+            - $ref: '#/components/schemas/final-destination-hit'
+            - type: 'null'
+        additional_matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/final-destination-hit'
+        status:
+          $ref: '#/components/schemas/final-destination-status'
+        original_request:
+          $ref: '#/components/schemas/final-destination-query'
+    final-destination-logging:
       type: object
       additionalProperties: false
       properties:
@@ -763,7 +796,10 @@ components:
           type: array
           items:
             type: string
-    response:
+    final-destination-response:
+      description: |
+        A response from the API. The `responses` are in the same order as the original 
+        `queries` from the request.
       type: object
       additionalProperties: false
       required:
@@ -774,9 +810,9 @@ components:
         responses:
           type: array
           items:
-            $ref: '#/components/schemas/hit'
+            $ref: '#/components/schemas/final-destination-hits'
         logging:
-          $ref: '#/components/schemas/logging'
+          $ref: '#/components/schemas/final-destination-logging'
         version:
           type: string
         request_id:
@@ -871,9 +907,7 @@ components:
         geojson:
           $ref: '#/components/schemas/feature-collection'
         distance:
-          type:
-            - number
-            - 'null'
+          type: number
           format: float
           description: |
             Distance in metres from the searched latitude/longitude.

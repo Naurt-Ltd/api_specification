@@ -4,13 +4,13 @@ required: [best_match, additional_matches, status]
 properties:
   best_match:
     oneOf:
-      - $ref: "./hit.yaml"
+      - $ref: "./final-destination-hit.yaml"
       - type: "null"
   additional_matches:
     type: array
     items:
-      $ref: "./hit.yaml"
+      $ref: "./final-destination-hit.yaml"
   status:
-    $ref: "./status.yaml"
+    $ref: "./final-destination-status.yaml"
   original_request:
-    $ref: "./../input/query.yaml"
+    $ref: "./../input/final-destination-query.yaml"

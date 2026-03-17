@@ -12,9 +12,7 @@ properties:
   geojson:
     $ref: "./../general/geojson/feature-collection.yaml"
   distance:
-    type:
-      - number
-      - "null"
+    type: number
     format: float
     description: |
       Distance in metres from the searched latitude/longitude.

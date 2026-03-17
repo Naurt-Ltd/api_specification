@@ -11,6 +11,6 @@ properties:
     minItems: 1
     maxItems: 200
     items:
-      $ref: "./query.yaml"
+      $ref: "./final-destination-query.yaml"
   options:
-    $ref: "./options.yaml"
+    $ref: "./final-destination-options.yaml"

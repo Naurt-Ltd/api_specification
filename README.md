@@ -7,5 +7,5 @@ redocly bundle src/naurt.yaml -o output.yaml
 Compile that into a library
 
 ```
-openapi-generator generate -i output.yaml -g rust -o generated/rust
+openapi-generator generate -i output.yaml -g rust -o generated/rust -t templates/rust --additional-properties=packageName=naurt-api
 ```
