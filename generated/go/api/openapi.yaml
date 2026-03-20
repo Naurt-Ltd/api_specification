@@ -1,0 +1,2205 @@
+openapi: 3.1.1
+info:
+  description: |
+    OpenAPI specification for Naurt's APIs.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Naurt API
+  version: 0.1.0
+servers:
+- url: https://api.naurt.net
+security:
+- ApiKeyAuth: []
+tags:
+- name: Final Destination
+- name: Meta
+paths:
+  /final-destination/v2:
+    options:
+      operationId: finaldestination-options
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/options-response"
+          description: Endpoint metadata
+      summary: Options
+      tags:
+      - Final Destination
+    post:
+      description: "Query the Naurt Final Destination dataset to retrieve precise\
+        \ destination\nlocations for addresses, buildings, entrances, and parking\
+        \ locations.\n\nEach request contains one or more `queries`. A query can represent\
+        \ several\ndifferent search types supported by the Final Destination API:\n\
+        \n• Forward geocoding — supply an `address_string` or `address_structured`\
+        \  \n• Reverse geocoding — supply a `location` with latitude and longitude\
+        \  \n• Naurt ID lookup — supply an `id` returned from a previous query  \n\
+        • Source ID lookup — supply identifiers such as `os_uprn`  \n\nThe API returns\
+        \ a best match for each query along with optional additional\nmatches. Results\
+        \ may include multiple destination geometries such as building\nentrances,\
+        \ delivery doors, or parking locations depending on available data.\n\nThe\
+        \ geometry format returned by the API is controlled by `options.geojson_type`:\n\
+        \n• `geojson` (default) — results are returned as standard GeoJSON\n  FeatureCollections\
+        \ with geometries and properties.\n\n• `key_value` — results are returned\
+        \ as a simplified key/value representation\n  where each destination type\
+        \ contains latitude and longitude coordinates.\n\nEach query result includes\
+        \ a status, the best match, optional additional\nmatches, and metadata such\
+        \ as distance from the search location when\napplicable.\n"
+      operationId: finaldestination-post
+      requestBody:
+        content:
+          application/json:
+            examples:
+              forward_geocode:
+                value:
+                  queries:
+                  - address_string: "32 Thames St, Windsor SL4 1PS"
+                    country: GB
+              reverse_geocode:
+                value:
+                  queries:
+                  - location:
+                      latitude: 50.542
+                      longitude: 0.234
+                      distance_filter: 5000
+              structured_geocode:
+                value:
+                  queries:
+                  - address_structured:
+                      street_number: "25"
+                      street_name: Lower Way
+                      city: Thatcham
+                      postalcode: RG19 3RR
+                    country: GB
+                  options:
+                    structured_response: true
+              id_lookup:
+                value:
+                  queries:
+                  - id: c56dbebb-c7ab-ede2-a7ac-f84e57d1878d
+              source_id_lookup:
+                value:
+                  queries:
+                  - source_id:
+                      os_uprn: "200001191298"
+                  options:
+                    source_id:
+                      os_uprn: true
+              key_value_response:
+                value:
+                  queries:
+                  - address_string: "32 Thames St, Windsor SL4 1PS"
+                  options:
+                    geojson_type: key_value
+            schema:
+              $ref: "#/components/schemas/final-destination-request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                feature_collection:
+                  value:
+                    request_id: 96becf25-e233-4f9c-a05c-4bed90190bdd
+                    version: v2
+                    responses:
+                    - status: ok
+                      best_match:
+                        id: c56dbebb-c7ab-ede2-a7ac-f84e57d1878d
+                        address: "11600 NW 14th St, Hollywood, FL 33026-2568, United\
+                          \ States"
+                        geojson:
+                          type: FeatureCollection
+                          features:
+                          - type: Feature
+                            geometry:
+                              type: Point
+                              coordinates:
+                              - -80.305321
+                              - 26.019775
+                            properties:
+                              naurt_type: basic_geocode
+                      additional_matches: []
+                key_value:
+                  value:
+                    request_id: 96becf25-e233-4f9c-a05c-4bed90190bdd
+                    version: v2
+                    responses:
+                    - status: ok
+                      best_match:
+                        id: c56dbebb-c7ab-ede2-a7ac-f84e57d1878d
+                        address: "11600 NW 14th St, Hollywood, FL 33026-2568, United\
+                          \ States"
+                        geojson:
+                          basic_geocode:
+                            latitude: 26.019775
+                            longitude: -80.305321
+                      additional_matches: []
+              schema:
+                $ref: "#/components/schemas/final-destination-response"
+          description: Successful lookup
+        "4XX":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response"
+          description: Bad request or validation errors
+        "5XX":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response"
+          description: Internal server errors
+      summary: Post
+      tags:
+      - Final Destination
+  /rendezvous/v1:
+    options:
+      description: |
+        Returns the current API version and any deprecated versions.
+      operationId: rendezvous-options
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/options-response"
+          description: Endpoint metadata
+          headers:
+            allow:
+              description: Allowed request methods
+              explode: false
+              schema:
+                example: POST
+                type: string
+              style: simple
+            Content-Type:
+              description: Response content type
+              explode: false
+              schema:
+                example: application/json
+                type: string
+              style: simple
+      summary: Options
+      tags:
+      - Rendezvous
+    post:
+      description: |
+        Rendezvous takes a list of queries, finds delivery clusters, and returns
+        cluster centres plus the covered addresses for each cluster.
+
+        This is not a routing tool. It does not provide delivery order or route
+        optimisation.
+      operationId: rendezvous-post
+      requestBody:
+        content:
+          application/json:
+            examples:
+              address_batch:
+                summary: Example address batch
+                value:
+                  queries:
+                  - address_string: "18a, Montague Place, Brighton, BN2 1JE, United\
+                      \ Kingdom"
+                  - address_string: "Flat 9, Montague Court, Montague Street, Brighton,\
+                      \ BN2 1NQ, United Kingdom"
+                  - address_string: "28 Hereford Street, Brighton, BN2 1JT, United\
+                      \ Kingdom"
+                  - address_string: 4378twbv5934wy 9q87v3ncyq9nv eriyuib4478twtvwbeihsecfonreniren
+                      vt9nhyutrevuhtvnuhitr
+                  - address_string: "27 Hereford Street, Brighton, BN2 1JT, United\
+                      \ Kingdom"
+                  - address_string: "28 Essex Street, Brighton, BN2 1JW, United Kingdom"
+                  - address_string: "Flat 31, Martlet Court, Hereford Street, Brighton,\
+                      \ BN2 1LQ, United Kingdom"
+            schema:
+              $ref: "#/components/schemas/rendezvous-request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rendezvous-response"
+          description: Successful clustering response
+        "400":
+          description: Bad request
+        "401":
+          description: Missing or invalid API key
+        "500":
+          description: Internal server error
+      security:
+      - ApiKeyAuth: []
+      summary: Post
+      tags:
+      - Rendezvous
+  /feedback/v2:
+    options:
+      operationId: feedback-options
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/options-response"
+          description: Endpoint metadata
+      summary: Options
+      tags:
+      - Feedback
+    post:
+      description: |
+        Submit feedback to Naurt for address, parking location, or door location data.
+
+        This endpoint can be used to:
+        - suggest corrections to existing Naurt address data
+        - suggest improved parking locations
+        - suggest improved door locations
+        - provide new address records where parking or door data is not yet available
+
+        A valid API key is required. Feedback submissions do not count against API usage.
+      operationId: feedback-post
+      requestBody:
+        content:
+          application/json:
+            examples:
+              address_with_door:
+                summary: New address with door location
+                value:
+                  queries:
+                  - address_string: "Flat A, 49 Upper Tulse Hill, London, SW2 2SQ"
+                    door_location:
+                      latitude: 51.448
+                      longitude: -0.119
+              mixed_batch:
+                summary: Mixed address and ID feedback
+                value:
+                  queries:
+                  - address_string: "Flat A, 49 Upper Tulse Hill, London, SW2 2SQ"
+                    door_location:
+                      latitude: 51.448
+                      longitude: -0.119
+                    parking_location:
+                      latitude: 51.45
+                      longitude: -0.12
+                  - id: 198a66f9-68f4-3f60-8d12-4c7ca4100efc
+                    parking_location:
+                      latitude: 51.45
+                      longitude: -0.12
+            schema:
+              $ref: "#/components/schemas/feedback-request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                success: true
+              schema:
+                $ref: "#/components/schemas/feedback-response"
+          description: Feedback accepted successfully
+        "400":
+          description: Bad request
+        "401":
+          description: Missing or invalid API key
+        "500":
+          description: Internal server error
+      security:
+      - ApiKeyAuth: []
+      summary: Post
+      tags:
+      - Feedback
+components:
+  schemas:
+    structured-address:
+      additionalProperties: false
+      description: "Naurt's own format for structured address data. Please see: \n\
+        https://docs.naurt.com/reference/address-structure/ for significant more \n\
+        details on this data format.\n"
+      example:
+        country: country
+        unit: unit
+        house_name: house_name
+        city: city
+        postalcode: postalcode
+        street_number: street_number
+        locality: locality
+        county: county
+        state: state
+        street_name: street_name
+      properties:
+        unit:
+          type: string
+        house_name:
+          type: string
+        street_number:
+          type: string
+        street_name:
+          type: string
+        locality:
+          type: string
+        city:
+          type: string
+        county:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        postalcode:
+          type: string
+    final-destination-location:
+      additionalProperties: false
+      description: "A location, using WGS84 latitude and longitude.\n\nUsed for a\
+        \ reverse geocode, or to add some location bias to a forward geocode.\n\n\
+        Use `distance_filter` to optionally limit the distance from this point that\
+        \ \nresults can appear within\n"
+      example:
+        distance_filter: 5755.339717336913
+        latitude: 17.318410500297276
+        longitude: 22.945559638799807
+      properties:
+        latitude:
+          maximum: 90
+          minimum: -90
+          type: number
+        longitude:
+          exclusiveMaximum: true
+          maximum: 180
+          minimum: -180
+          type: number
+        distance_filter:
+          default: 5000
+          exclusiveMinimum: true
+          maximum: 25000
+          minimum: 0
+          type: number
+      required:
+      - latitude
+      - longitude
+    country:
+      description: |
+        An enum representing all possible countries that Naurt currently supports
+      enum:
+      - AE
+      - AU
+      - AT
+      - BE
+      - BR
+      - CA
+      - CH
+      - CZ
+      - DE
+      - EG
+      - ES
+      - FI
+      - FR
+      - GB
+      - GG
+      - HK
+      - IE
+      - IM
+      - IT
+      - JE
+      - JP
+      - KR
+      - LU
+      - NL
+      - "NO"
+      - NZ
+      - PL
+      - PT
+      - SA
+      - SE
+      - SI
+      - SG
+      - TW
+      - US
+      - UK
+      - ZA
+      type: string
+    final-destination-source-id-request:
+      additionalProperties: false
+      example:
+        oneOf: ""
+      properties:
+        oneOf:
+          os_uprn:
+            type: boolean
+          os_udprn:
+            type: boolean
+    language:
+      default: Auto
+      description: "Used for reverse geocodes only, to decide which language the response\
+        \ is in. \nIn a forward geocode, the response language will match the input\
+        \ language.\n\nSee: https://docs.naurt.com/reference/language/ for detailed\
+        \ information on \nlanguage availability for all countries (not all countries\
+        \ have alternative \nlanguages)\n"
+      enum:
+      - Auto
+      - EN
+      - AR
+      - JA
+      - FR
+      - DE
+      - IT
+      - PT
+      - KO
+      - ZH
+      - NL
+      - "NO"
+      - FI
+      - PL
+      - SL
+      - CZ
+      type: string
+    final-destination-query:
+      additionalProperties: false
+      description: |
+        A single search query. It can be used to lookup a door and parking spot by:
+        - Forward geocode
+        - Reverse geocode
+        - Structured geocode
+        - Naurt ID lookup
+        - Source ID lookup
+      example:
+        country: AE
+        address_string: address_string
+        location:
+          distance_filter: 5755.339717336913
+          latitude: 17.318410500297276
+          longitude: 22.945559638799807
+        language: Auto
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source_id:
+          oneOf: ""
+        address_structured:
+          country: country
+          unit: unit
+          house_name: house_name
+          city: city
+          postalcode: postalcode
+          street_number: street_number
+          locality: locality
+          county: county
+          state: state
+          street_name: street_name
+        additional_matches: false
+      properties:
+        address_string:
+          type: string
+        address_structured:
+          $ref: "#/components/schemas/structured-address"
+        location:
+          $ref: "#/components/schemas/final-destination-location"
+        id:
+          format: uuid
+          type: string
+        country:
+          $ref: "#/components/schemas/country"
+        source_id:
+          $ref: "#/components/schemas/final-destination-source-id-request"
+        additional_matches:
+          default: false
+          type: boolean
+        language:
+          $ref: "#/components/schemas/language"
+    geojson-type:
+      default: geojson
+      description: |
+        Use this to switch between a key-value style GeoJSON or a classic GeoJSON
+      enum:
+      - geojson
+      - key_value
+      type: string
+    input-filter:
+      default: loose
+      description: "Input filtering helps when you have addresses from sources you\
+        \ can't control.\nSometimes, providers might miss out on important parts of\
+        \ addresses, like a\nstreet number or postcode. If Naurt detects that an address\
+        \ is missing too \nmany fields to be likely to give a good match, it can be\
+        \ rejected by this \nfeature\n\n`none` turns this feature off and does not\
+        \ do any input filtering. This may \nresult in some poor responses\n\n`loose`\
+        \ is the default - it does filter out some poor inputs but allows some \n\
+        missing fields \n\n`strict` is our strictest, and only allows searches which\
+        \ are likely to\nproduce good matches\n"
+      enum:
+      - none
+      - loose
+      - strict
+      type: string
+    final-destination-options:
+      additionalProperties: false
+      description: |
+        `options` impact all `queries` within a request
+      properties:
+        pretty_print:
+          default: false
+          description: |
+            This will format the response in a more human readable way. Only
+            recommended for debug, as it increases payload size
+          type: boolean
+        verbose:
+          default: false
+          description: "Returns additional debug information about request processing.\
+            \ Only \nrecommended for debug, as it increases payload size\n"
+          type: boolean
+        structured_response:
+          default: false
+          description: |
+            Adds the Naurt structured format of the address to the response
+          type: boolean
+        geojson_type:
+          $ref: "#/components/schemas/geojson-type"
+        return_original:
+          default: false
+          description: |
+            Returns your original query back in the response
+          type: boolean
+        input_filter:
+          $ref: "#/components/schemas/input-filter"
+      ype: object
+    final-destination-request:
+      additionalProperties: false
+      description: "A single request to the API, which can contain up to 200 queries.\
+        \ Each query \nis independent and can be of a different type.\n"
+      properties:
+        queries:
+          items:
+            $ref: "#/components/schemas/final-destination-query"
+          maxItems: 200
+          minItems: 1
+          type: array
+        options:
+          $ref: "#/components/schemas/final-destination-options"
+      required:
+      - queries
+    point:
+      example:
+        coordinates:
+        - 0.8008281904610115
+        - 0.8008281904610115
+        type: Point
+      properties:
+        coordinates:
+          items:
+            format: double
+            type: number
+          maxItems: 2
+          minItems: 2
+          type: array
+        type:
+          enum:
+          - Point
+          type: string
+      required:
+      - coordinates
+      - type
+    multipoint:
+      properties:
+        coordinates:
+          items:
+            items:
+              format: double
+              type: number
+            maxItems: 2
+            minItems: 2
+            type: array
+          type: array
+        type:
+          enum:
+          - MultiPoint
+          type: string
+    polygon:
+      properties:
+        coordinates:
+          items:
+            items:
+              items:
+                format: double
+                type: number
+              maxItems: 2
+              minItems: 2
+              type: array
+            type: array
+          type: array
+        type:
+          enum:
+          - Polygon
+          type: string
+      required:
+      - coordinates
+      - type
+    accuracy:
+      example:
+        quality: low
+      properties:
+        quality:
+          enum:
+          - low
+          - medium
+          - high
+          type: string
+      required:
+      - quality
+    feature-properties:
+      example:
+        minimum_parking_to_door_distance: 6.027456183070403
+        accuracy:
+          quality: low
+        naurt_type: basic_geocode
+      properties:
+        naurt_type:
+          enum:
+          - basic_geocode
+          - naurt_door
+          - naurt_building
+          - naurt_parking
+          type: string
+        accuracy:
+          $ref: "#/components/schemas/accuracy"
+        minimum_parking_to_door_distance:
+          format: double
+          type: number
+      required:
+      - naurt_type
+    feature:
+      example:
+        geometry:
+          coordinates:
+          - 0.8008281904610115
+          - 0.8008281904610115
+          type: Point
+        type: Feature
+        properties:
+          minimum_parking_to_door_distance: 6.027456183070403
+          accuracy:
+            quality: low
+          naurt_type: basic_geocode
+      properties:
+        geometry:
+          $ref: "#/components/schemas/feature_geometry"
+        properties:
+          $ref: "#/components/schemas/feature-properties"
+        type:
+          enum:
+          - Feature
+          type: string
+      required:
+      - geometry
+      - properties
+      - type
+    feature-collection:
+      example:
+        features:
+        - geometry:
+            coordinates:
+            - 0.8008281904610115
+            - 0.8008281904610115
+            type: Point
+          type: Feature
+          properties:
+            minimum_parking_to_door_distance: 6.027456183070403
+            accuracy:
+              quality: low
+            naurt_type: basic_geocode
+        - geometry:
+            coordinates:
+            - 0.8008281904610115
+            - 0.8008281904610115
+            type: Point
+          type: Feature
+          properties:
+            minimum_parking_to_door_distance: 6.027456183070403
+            accuracy:
+              quality: low
+            naurt_type: basic_geocode
+        - geometry:
+            coordinates:
+            - 0.8008281904610115
+            - 0.8008281904610115
+            type: Point
+          type: Feature
+          properties:
+            minimum_parking_to_door_distance: 6.027456183070403
+            accuracy:
+              quality: low
+            naurt_type: basic_geocode
+        - geometry:
+            coordinates:
+            - 0.8008281904610115
+            - 0.8008281904610115
+            type: Point
+          type: Feature
+          properties:
+            minimum_parking_to_door_distance: 6.027456183070403
+            accuracy:
+              quality: low
+            naurt_type: basic_geocode
+        type: FeatureCollection
+      properties:
+        features:
+          items:
+            $ref: "#/components/schemas/feature"
+          maxItems: 4
+          minItems: 1
+          type: array
+        type:
+          default: FeatureCollection
+          enum:
+          - FeatureCollection
+          type: string
+      required:
+      - features
+      - type
+    key-value:
+      properties:
+        building:
+          $ref: "#/components/schemas/polygon"
+        default_geocode:
+          $ref: "#/components/schemas/point"
+        entrance:
+          $ref: "#/components/schemas/multipoint"
+        parking:
+          $ref: "#/components/schemas/polygon"
+      required:
+      - default_geocode
+    final-destination-search-confidence:
+      description: "Confidence score in the range 0.0 to 1.0 indicating how well the\
+        \ result \nmatches the query. Higher is better.\n\nSee: https://docs.naurt.com/reference/search-confidence\n\
+        \nNot to be confused with Accuracy, which is how good the data itself is.\
+        \ This \nis about the likelihood of a good match.\n"
+      example: 0.93
+      format: double
+      maximum: 1
+      minimum: 0
+      type: number
+    final-destination-source-id-response:
+      additionalProperties: false
+      description: "An object containing information on source IDs. Source IDs refer\
+        \ to underlying\nIDs from address data sets. Currently supporting UPRN and\
+        \ UDPRN in the UK \nreferring to the OrdnanceSurvey datasets\n"
+      example:
+        UPRN:
+          value:
+            os_uprn: "100062664604"
+        UDPRN:
+          value:
+            os_udprn: "25962203"
+      properties:
+        os_uprn:
+          type: string
+        os_udprn:
+          type: string
+    final-destination-hit:
+      additionalProperties: false
+      example:
+        geojson:
+          features:
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          type: FeatureCollection
+        address: address
+        distance: 1.4658129805029452
+        search_confidence: 0.93
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source_id:
+          UPRN:
+            value:
+              os_uprn: "100062664604"
+          UDPRN:
+            value:
+              os_udprn: "25962203"
+        structured_response:
+          country: country
+          unit: unit
+          house_name: house_name
+          city: city
+          postalcode: postalcode
+          street_number: street_number
+          locality: locality
+          county: county
+          state: state
+          street_name: street_name
+      properties:
+        id:
+          format: uuid
+          type: string
+        address:
+          type: string
+        geojson:
+          $ref: "#/components/schemas/final_destination_hit_geojson"
+        distance:
+          type: number
+        search_confidence:
+          description: "Confidence score in the range 0.0 to 1.0 indicating how well\
+            \ the result \nmatches the query. Higher is better.\n\nSee: https://docs.naurt.com/reference/search-confidence\n\
+            \nNot to be confused with Accuracy, which is how good the data itself\
+            \ is. This \nis about the likelihood of a good match.\n"
+          example: 0.93
+          format: double
+          maximum: 1
+          minimum: 0
+          type: number
+        structured_response:
+          $ref: "#/components/schemas/structured-address"
+        source_id:
+          $ref: "#/components/schemas/final-destination-source-id-response"
+      required:
+      - address
+      - geojson
+      - id
+      title: Final Destination Hit
+    final-destination-status:
+      description: "The `queries` and `responses` arrays are always 1:1. If no match\
+        \ can be found,\na 404 will NOT be returned. Instead, check this enum for\
+        \ `no_matches`. That \nindicates no error has happened, but nothing was found.\
+        \ `ok` when something is\nfound.\n"
+      enum:
+      - ok
+      - no_matches
+      type: string
+    final-destination-hits:
+      additionalProperties: false
+      example:
+        original_request:
+          country: AE
+          address_string: address_string
+          location:
+            distance_filter: 5755.339717336913
+            latitude: 17.318410500297276
+            longitude: 22.945559638799807
+          language: Auto
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source_id:
+            oneOf: ""
+          address_structured:
+            country: country
+            unit: unit
+            house_name: house_name
+            city: city
+            postalcode: postalcode
+            street_number: street_number
+            locality: locality
+            county: county
+            state: state
+            street_name: street_name
+          additional_matches: false
+        best_match: ""
+        additional_matches:
+        - geojson:
+            features:
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            type: FeatureCollection
+          address: address
+          distance: 1.4658129805029452
+          search_confidence: 0.93
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source_id:
+            UPRN:
+              value:
+                os_uprn: "100062664604"
+            UDPRN:
+              value:
+                os_udprn: "25962203"
+          structured_response:
+            country: country
+            unit: unit
+            house_name: house_name
+            city: city
+            postalcode: postalcode
+            street_number: street_number
+            locality: locality
+            county: county
+            state: state
+            street_name: street_name
+        - geojson:
+            features:
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            type: FeatureCollection
+          address: address
+          distance: 1.4658129805029452
+          search_confidence: 0.93
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source_id:
+            UPRN:
+              value:
+                os_uprn: "100062664604"
+            UDPRN:
+              value:
+                os_udprn: "25962203"
+          structured_response:
+            country: country
+            unit: unit
+            house_name: house_name
+            city: city
+            postalcode: postalcode
+            street_number: street_number
+            locality: locality
+            county: county
+            state: state
+            street_name: street_name
+        status: ok
+      properties:
+        best_match:
+          allOf:
+          - $ref: "#/components/schemas/final-destination-hit"
+          nullable: true
+        additional_matches:
+          items:
+            $ref: "#/components/schemas/final-destination-hit"
+          type: array
+        status:
+          $ref: "#/components/schemas/final-destination-status"
+        original_request:
+          $ref: "#/components/schemas/final-destination-query"
+      required:
+      - additional_matches
+      - best_match
+      - status
+    final-destination-logging:
+      additionalProperties: false
+      example:
+        warnings:
+        - warnings
+        - warnings
+        errors:
+        - errors
+        - errors
+        info:
+        - info
+        - info
+      properties:
+        info:
+          items:
+            type: string
+          type: array
+        warnings:
+          items:
+            type: string
+          type: array
+        errors:
+          items:
+            type: string
+          type: array
+    final-destination-response:
+      additionalProperties: false
+      description: "A response from the API. The `responses` are in the same order\
+        \ as the original \n`queries` from the request.\n"
+      example:
+        responses:
+        - original_request:
+            country: AE
+            address_string: address_string
+            location:
+              distance_filter: 5755.339717336913
+              latitude: 17.318410500297276
+              longitude: 22.945559638799807
+            language: Auto
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            source_id:
+              oneOf: ""
+            address_structured:
+              country: country
+              unit: unit
+              house_name: house_name
+              city: city
+              postalcode: postalcode
+              street_number: street_number
+              locality: locality
+              county: county
+              state: state
+              street_name: street_name
+            additional_matches: false
+          best_match: ""
+          additional_matches:
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 1.4658129805029452
+            search_confidence: 0.93
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            source_id:
+              UPRN:
+                value:
+                  os_uprn: "100062664604"
+              UDPRN:
+                value:
+                  os_udprn: "25962203"
+            structured_response:
+              country: country
+              unit: unit
+              house_name: house_name
+              city: city
+              postalcode: postalcode
+              street_number: street_number
+              locality: locality
+              county: county
+              state: state
+              street_name: street_name
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 1.4658129805029452
+            search_confidence: 0.93
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            source_id:
+              UPRN:
+                value:
+                  os_uprn: "100062664604"
+              UDPRN:
+                value:
+                  os_udprn: "25962203"
+            structured_response:
+              country: country
+              unit: unit
+              house_name: house_name
+              city: city
+              postalcode: postalcode
+              street_number: street_number
+              locality: locality
+              county: county
+              state: state
+              street_name: street_name
+          status: ok
+        - original_request:
+            country: AE
+            address_string: address_string
+            location:
+              distance_filter: 5755.339717336913
+              latitude: 17.318410500297276
+              longitude: 22.945559638799807
+            language: Auto
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            source_id:
+              oneOf: ""
+            address_structured:
+              country: country
+              unit: unit
+              house_name: house_name
+              city: city
+              postalcode: postalcode
+              street_number: street_number
+              locality: locality
+              county: county
+              state: state
+              street_name: street_name
+            additional_matches: false
+          best_match: ""
+          additional_matches:
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 1.4658129805029452
+            search_confidence: 0.93
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            source_id:
+              UPRN:
+                value:
+                  os_uprn: "100062664604"
+              UDPRN:
+                value:
+                  os_udprn: "25962203"
+            structured_response:
+              country: country
+              unit: unit
+              house_name: house_name
+              city: city
+              postalcode: postalcode
+              street_number: street_number
+              locality: locality
+              county: county
+              state: state
+              street_name: street_name
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 1.4658129805029452
+            search_confidence: 0.93
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            source_id:
+              UPRN:
+                value:
+                  os_uprn: "100062664604"
+              UDPRN:
+                value:
+                  os_udprn: "25962203"
+            structured_response:
+              country: country
+              unit: unit
+              house_name: house_name
+              city: city
+              postalcode: postalcode
+              street_number: street_number
+              locality: locality
+              county: county
+              state: state
+              street_name: street_name
+          status: ok
+        logging:
+          warnings:
+          - warnings
+          - warnings
+          errors:
+          - errors
+          - errors
+          info:
+          - info
+          - info
+        version: version
+        request_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        responses:
+          items:
+            $ref: "#/components/schemas/final-destination-hits"
+          type: array
+        logging:
+          $ref: "#/components/schemas/final-destination-logging"
+        version:
+          type: string
+        request_id:
+          format: uuid
+          type: string
+      required:
+      - request_id
+      - responses
+      - version
+    error-response:
+      additionalProperties: false
+      description: "All Naurt errors come in this standard format. \n\n`code` is a\
+        \ unique error code you can quote to support, should you need to\n\n`reason`\
+        \ explains why this error has been received\n\n`remediation` gives steps to\
+        \ help resolve this error\n"
+      example:
+        reason: reason
+        remediation: remediation
+        code: code
+      properties:
+        code:
+          type: string
+        reason:
+          type: string
+        remediation:
+          type: string
+      required:
+      - code
+      - reason
+      - remediation
+    options-response:
+      additionalProperties: false
+      example:
+        current_version: current_version
+        deprecated_versions:
+        - deprecated_versions
+        - deprecated_versions
+      properties:
+        current_version:
+          type: string
+        deprecated_versions:
+          items:
+            type: string
+          type: array
+      required:
+      - current_version
+      - deprecated_versions
+    rendezvous-query:
+      additionalProperties: true
+      description: |
+        Shared Naurt Query object.
+
+        The Rendezvous spec refers to the shared Search Query specification.
+        At minimum, address-based queries such as `address_string` are supported.
+        Other shared query forms may also be accepted.
+      example:
+        address_string: "18a, Montague Place, Brighton, BN2 1JE, United Kingdom"
+      properties:
+        address_string:
+          description: Free-form address query string
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+    rendezvous-options:
+      additionalProperties: true
+      description: Optional Rendezvous request options
+      type: object
+    rendezvous-request:
+      additionalProperties: false
+      properties:
+        queries:
+          description: |
+            List of Query objects. The Query object is shared across Naurt APIs.
+            Different query types may be mixed in the same request.
+          items:
+            $ref: "#/components/schemas/rendezvous-query"
+          maxItems: 200
+          type: array
+        options:
+          additionalProperties: true
+          description: Optional Rendezvous request options
+          type: object
+      required:
+      - queries
+    rendezvous-hit-data:
+      additionalProperties: false
+      example:
+        geojson:
+          features:
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          - geometry:
+              coordinates:
+              - 0.8008281904610115
+              - 0.8008281904610115
+              type: Point
+            type: Feature
+            properties:
+              minimum_parking_to_door_distance: 6.027456183070403
+              accuracy:
+                quality: low
+              naurt_type: basic_geocode
+          type: FeatureCollection
+        address: address
+        distance: 0.8008282
+        id: id
+      properties:
+        id:
+          type: string
+        address:
+          description: Normalised address; may differ from the searched address
+          type: string
+        geojson:
+          $ref: "#/components/schemas/feature-collection"
+        distance:
+          description: |
+            Distance in metres from the searched latitude/longitude.
+            Present only when searching with latitude and longitude.
+          format: float
+          type: number
+      required:
+      - address
+      - geojson
+      - id
+    rendezvous-hit:
+      additionalProperties: false
+      example:
+        centre:
+          geojson:
+            features:
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            type: FeatureCollection
+          address: address
+          distance: 0.8008282
+          id: id
+        covers:
+        - geojson:
+            features:
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            type: FeatureCollection
+          address: address
+          distance: 0.8008282
+          id: id
+        - geojson:
+            features:
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            - geometry:
+                coordinates:
+                - 0.8008281904610115
+                - 0.8008281904610115
+                type: Point
+              type: Feature
+              properties:
+                minimum_parking_to_door_distance: 6.027456183070403
+                accuracy:
+                  quality: low
+                naurt_type: basic_geocode
+            type: FeatureCollection
+          address: address
+          distance: 0.8008282
+          id: id
+      properties:
+        centre:
+          $ref: "#/components/schemas/rendezvous-hit-data"
+        covers:
+          items:
+            $ref: "#/components/schemas/rendezvous-hit-data"
+          type: array
+      required:
+      - centre
+      - covers
+    rendezvous-response:
+      additionalProperties: false
+      example:
+        responses:
+        - centre:
+            geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 0.8008282
+            id: id
+          covers:
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 0.8008282
+            id: id
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 0.8008282
+            id: id
+        - centre:
+            geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 0.8008282
+            id: id
+          covers:
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 0.8008282
+            id: id
+          - geojson:
+              features:
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              - geometry:
+                  coordinates:
+                  - 0.8008281904610115
+                  - 0.8008281904610115
+                  type: Point
+                type: Feature
+                properties:
+                  minimum_parking_to_door_distance: 6.027456183070403
+                  accuracy:
+                    quality: low
+                  naurt_type: basic_geocode
+              type: FeatureCollection
+            address: address
+            distance: 0.8008282
+            id: id
+        unmatched:
+        - address_string: "18a, Montague Place, Brighton, BN2 1JE, United Kingdom"
+        - address_string: "18a, Montague Place, Brighton, BN2 1JE, United Kingdom"
+        version: version
+        request_id: request_id
+      properties:
+        responses:
+          items:
+            $ref: "#/components/schemas/rendezvous-hit"
+          type: array
+        unmatched:
+          description: Queries that could not be matched
+          items:
+            $ref: "#/components/schemas/rendezvous-query"
+          type: array
+        version:
+          description: API version used to service the request
+          nullable: true
+          type: string
+        request_id:
+          description: |
+            Request identifier useful when reporting issues to Naurt.
+            Mentioned in the prose docs, though not shown in the response shape block.
+          nullable: true
+          type: string
+      required:
+      - responses
+      - unmatched
+    feedback-location:
+      additionalProperties: false
+      properties:
+        latitude:
+          format: double
+          type: number
+        longitude:
+          format: double
+          type: number
+      required:
+      - latitude
+      - longitude
+    feedback-query:
+      allOf:
+      - nullable: true
+        oneOf: []
+      - anyOf: []
+        nullable: true
+      - additionalProperties: false
+        properties:
+          id:
+            description: Existing Naurt ID for the address being updated
+            format: uuid
+            type: string
+          address_string:
+            description: |
+              Address text for a new feedback item. Address strings are not matched
+              with current data, so existing addresses should use `id` instead.
+            type: string
+          parking_location:
+            $ref: "#/components/schemas/feedback-location"
+          door_location:
+            $ref: "#/components/schemas/feedback-location"
+        type: object
+        example: null
+      example: null
+    feedback-request:
+      additionalProperties: false
+      properties:
+        queries:
+          items:
+            $ref: "#/components/schemas/feedback-query"
+          minItems: 1
+          type: array
+      required:
+      - queries
+    feedback-response:
+      additionalProperties: false
+      example:
+        success: true
+      properties:
+        success:
+          description: Confirms that Naurt received the suggestion
+          enum:
+          - true
+          type: boolean
+      required:
+      - success
+    feature_geometry:
+      oneOf:
+      - $ref: "#/components/schemas/point"
+      - $ref: "#/components/schemas/multipoint"
+      - $ref: "#/components/schemas/polygon"
+    final_destination_hit_geojson:
+      oneOf:
+      - $ref: "#/components/schemas/feature-collection"
+      - $ref: "#/components/schemas/key-value"
+  securitySchemes:
+    ApiKeyAuth:
+      description: |
+        Authenticate using your Naurt API key.
+
+        Send the raw API key in the `Authorization` header.
+        Do not prefix it with `Bearer`.
+
+        Example:
+        `Authorization: nk_your_api_key_here`
+      in: header
+      name: Authorization
+      type: apiKey

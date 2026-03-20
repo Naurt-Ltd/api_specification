@@ -1,0 +1,12 @@
+packageName: naurt_api
+packageVersion: 0.1.0
+
+enumClassPrefix: true
+isGoSubmodule: false
+withGoMod: true
+disallowAdditionalPropertiesIfNotPresent: false
+generateUnmarshalJSON: true
+generateInterfaces: true
+
+gitUserId: Naurt-Ltd
+gitRepoId: api_specification/generated/go

@@ -22,12 +22,12 @@ paths:
       operationId: finaldestination-options
       summary: Options
       responses:
-        "200":
+        '200':
           description: Endpoint metadata
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/options-response"
+                $ref: '#/components/schemas/options-response'
     post:
       tags:
         - Final Destination
@@ -65,7 +65,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/final-destination-request"
+              $ref: '#/components/schemas/final-destination-request'
             examples:
               forward_geocode:
                 value:
@@ -83,7 +83,7 @@ paths:
                 value:
                   queries:
                     - address_structured:
-                        street_number: "25"
+                        street_number: '25'
                         street_name: Lower Way
                         city: Thatcham
                         postalcode: RG19 3RR
@@ -98,7 +98,7 @@ paths:
                 value:
                   queries:
                     - source_id:
-                        os_uprn: "200001191298"
+                        os_uprn: '200001191298'
                   options:
                     source_id:
                       os_uprn: true
@@ -109,12 +109,12 @@ paths:
                   options:
                     geojson_type: key_value
       responses:
-        "200":
+        '200':
           description: Successful lookup
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/final-destination-response"
+                $ref: '#/components/schemas/final-destination-response'
               examples:
                 feature_collection:
                   value:
@@ -156,13 +156,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error-response"
+                $ref: '#/components/schemas/error-response'
         5XX:
           description: Internal server errors
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error-response"
+                $ref: '#/components/schemas/error-response'
   /rendezvous/v1:
     options:
       tags:
@@ -172,7 +172,7 @@ paths:
         Returns the current API version and any deprecated versions.
       operationId: rendezvous-options
       responses:
-        "200":
+        '200':
           description: Endpoint metadata
           headers:
             allow:
@@ -188,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/options-response"
+                $ref: '#/components/schemas/options-response'
     post:
       tags:
         - Rendezvous
@@ -207,7 +207,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/rendezvous-request"
+              $ref: '#/components/schemas/rendezvous-request'
             examples:
               address_batch:
                 summary: Example address batch
@@ -221,17 +221,17 @@ paths:
                     - address_string: 28 Essex Street, Brighton, BN2 1JW, United Kingdom
                     - address_string: Flat 31, Martlet Court, Hereford Street, Brighton, BN2 1LQ, United Kingdom
       responses:
-        "200":
+        '200':
           description: Successful clustering response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/rendezvous-response"
-        "400":
+                $ref: '#/components/schemas/rendezvous-response'
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Missing or invalid API key
-        "500":
+        '500':
           description: Internal server error
   /feedback/v2:
     options:
@@ -240,12 +240,12 @@ paths:
       operationId: feedback-options
       summary: Options
       responses:
-        "200":
+        '200':
           description: Endpoint metadata
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/options-response"
+                $ref: '#/components/schemas/options-response'
     post:
       tags:
         - Feedback
@@ -268,7 +268,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/feedback-request"
+              $ref: '#/components/schemas/feedback-request'
             examples:
               address_with_door:
                 summary: New address with door location
@@ -294,19 +294,19 @@ paths:
                         latitude: 51.45
                         longitude: -0.12
       responses:
-        "200":
+        '200':
           description: Feedback accepted successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/feedback-response"
+                $ref: '#/components/schemas/feedback-response'
               example:
                 success: true
-        "400":
+        '400':
           description: Bad request
-        "401":
+        '401':
           description: Missing or invalid API key
-        "500":
+        '500':
           description: Internal server error
 components:
   securitySchemes:
@@ -407,7 +407,7 @@ components:
         - KR
         - LU
         - NL
-        - "NO"
+        - 'NO'
         - NZ
         - PL
         - PT
@@ -449,7 +449,7 @@ components:
         - KO
         - ZH
         - NL
-        - "NO"
+        - 'NO'
         - FI
         - PL
         - SL
@@ -462,21 +462,21 @@ components:
         address_string:
           type: string
         address_structured:
-          $ref: "#/components/schemas/structured-address"
+          $ref: '#/components/schemas/structured-address'
         location:
-          $ref: "#/components/schemas/final-destination-location"
+          $ref: '#/components/schemas/final-destination-location'
         id:
           type: string
           format: uuid
         country:
-          $ref: "#/components/schemas/country"
+          $ref: '#/components/schemas/country'
         source_id:
-          $ref: "#/components/schemas/final-destination-source-id-request"
+          $ref: '#/components/schemas/final-destination-source-id-request'
         additional_matches:
           type: boolean
           default: false
         language:
-          $ref: "#/components/schemas/language"
+          $ref: '#/components/schemas/language'
       description: |
         A single search query. It can be used to lookup a door and parking spot by:
         - Forward geocode
@@ -538,14 +538,14 @@ components:
           description: |
             Adds the Naurt structured format of the address to the response
         geojson_type:
-          $ref: "#/components/schemas/geojson-type"
+          $ref: '#/components/schemas/geojson-type'
         return_original:
           type: boolean
           default: false
           description: |
             Returns your original query back in the response
         input_filter:
-          $ref: "#/components/schemas/input-filter"
+          $ref: '#/components/schemas/input-filter'
     final-destination-request:
       description: |
         A single request to the API, which can contain up to 200 queries. Each query 
@@ -560,9 +560,9 @@ components:
           minItems: 1
           maxItems: 200
           items:
-            $ref: "#/components/schemas/final-destination-query"
+            $ref: '#/components/schemas/final-destination-query'
         options:
-          $ref: "#/components/schemas/final-destination-options"
+          $ref: '#/components/schemas/final-destination-options'
     point:
       type: object
       required:
@@ -641,7 +641,7 @@ components:
             - naurt_building
             - naurt_parking
         accuracy:
-          $ref: "#/components/schemas/accuracy"
+          $ref: '#/components/schemas/accuracy'
         minimum_parking_to_door_distance:
           type: number
           format: double
@@ -654,11 +654,11 @@ components:
       properties:
         geometry:
           oneOf:
-            - $ref: "#/components/schemas/point"
-            - $ref: "#/components/schemas/multipoint"
-            - $ref: "#/components/schemas/polygon"
+            - $ref: '#/components/schemas/point'
+            - $ref: '#/components/schemas/multipoint'
+            - $ref: '#/components/schemas/polygon'
         properties:
-          $ref: "#/components/schemas/feature-properties"
+          $ref: '#/components/schemas/feature-properties'
         type:
           type: string
           enum:
@@ -674,7 +674,7 @@ components:
           minItems: 1
           maxItems: 4
           items:
-            $ref: "#/components/schemas/feature"
+            $ref: '#/components/schemas/feature'
         type:
           type: string
           enum:
@@ -682,15 +682,17 @@ components:
           default: FeatureCollection
     key-value:
       type: object
+      required:
+        - default_geocode
       properties:
         building:
-          $ref: "#/components/schemas/polygon"
+          $ref: '#/components/schemas/polygon'
         default_geocode:
-          $ref: "#/components/schemas/point"
+          $ref: '#/components/schemas/point'
         entrance:
-          $ref: "#/components/schemas/multipoint"
+          $ref: '#/components/schemas/multipoint'
         parking:
-          $ref: "#/components/schemas/polygon"
+          $ref: '#/components/schemas/polygon'
     final-destination-search-confidence:
       description: |
         Confidence score in the range 0.0 to 1.0 indicating how well the result 
@@ -713,10 +715,10 @@ components:
       example:
         UPRN:
           value:
-            os_uprn: "100062664604"
+            os_uprn: '100062664604'
         UDPRN:
           value:
-            os_udprn: "25962203"
+            os_udprn: '25962203'
       type: object
       additionalProperties: false
       properties:
@@ -740,16 +742,16 @@ components:
           type: string
         geojson:
           oneOf:
-            - $ref: "#/components/schemas/feature-collection"
-            - $ref: "#/components/schemas/key-value"
+            - $ref: '#/components/schemas/feature-collection'
+            - $ref: '#/components/schemas/key-value'
         distance:
           type: number
         search_confidence:
-          $ref: "#/components/schemas/final-destination-search-confidence"
+          $ref: '#/components/schemas/final-destination-search-confidence'
         structured_response:
-          $ref: "#/components/schemas/structured-address"
+          $ref: '#/components/schemas/structured-address'
         source_id:
-          $ref: "#/components/schemas/final-destination-source-id-response"
+          $ref: '#/components/schemas/final-destination-source-id-response'
     final-destination-status:
       description: |
         The `queries` and `responses` arrays are always 1:1. If no match can be found,
@@ -770,16 +772,16 @@ components:
       properties:
         best_match:
           oneOf:
-            - $ref: "#/components/schemas/final-destination-hit"
-            - type: "null"
+            - $ref: '#/components/schemas/final-destination-hit'
+            - type: 'null'
         additional_matches:
           type: array
           items:
-            $ref: "#/components/schemas/final-destination-hit"
+            $ref: '#/components/schemas/final-destination-hit'
         status:
-          $ref: "#/components/schemas/final-destination-status"
+          $ref: '#/components/schemas/final-destination-status'
         original_request:
-          $ref: "#/components/schemas/final-destination-query"
+          $ref: '#/components/schemas/final-destination-query'
     final-destination-logging:
       type: object
       additionalProperties: false
@@ -810,9 +812,9 @@ components:
         responses:
           type: array
           items:
-            $ref: "#/components/schemas/final-destination-hits"
+            $ref: '#/components/schemas/final-destination-hits'
         logging:
-          $ref: "#/components/schemas/final-destination-logging"
+          $ref: '#/components/schemas/final-destination-logging'
         version:
           type: string
         request_id:
@@ -888,9 +890,9 @@ components:
             List of Query objects. The Query object is shared across Naurt APIs.
             Different query types may be mixed in the same request.
           items:
-            $ref: "#/components/schemas/rendezvous-query"
+            $ref: '#/components/schemas/rendezvous-query'
         options:
-          $ref: "#/components/schemas/rendezvous-options"
+          $ref: '#/components/schemas/rendezvous-options'
       additionalProperties: false
     rendezvous-hit-data:
       type: object
@@ -905,7 +907,7 @@ components:
           type: string
           description: Normalised address; may differ from the searched address
         geojson:
-          $ref: "#/components/schemas/feature-collection"
+          $ref: '#/components/schemas/feature-collection'
         distance:
           type: number
           format: float
@@ -920,11 +922,11 @@ components:
         - covers
       properties:
         centre:
-          $ref: "#/components/schemas/rendezvous-hit-data"
+          $ref: '#/components/schemas/rendezvous-hit-data'
         covers:
           type: array
           items:
-            $ref: "#/components/schemas/rendezvous-hit-data"
+            $ref: '#/components/schemas/rendezvous-hit-data'
       additionalProperties: false
     rendezvous-response:
       type: object
@@ -935,21 +937,21 @@ components:
         responses:
           type: array
           items:
-            $ref: "#/components/schemas/rendezvous-hit"
+            $ref: '#/components/schemas/rendezvous-hit'
         unmatched:
           type: array
           description: Queries that could not be matched
           items:
-            $ref: "#/components/schemas/rendezvous-query"
+            $ref: '#/components/schemas/rendezvous-query'
         version:
           type:
             - string
-            - "null"
+            - 'null'
           description: API version used to service the request
         request_id:
           type:
             - string
-            - "null"
+            - 'null'
           description: |
             Request identifier useful when reporting issues to Naurt.
             Mentioned in the prose docs, though not shown in the response shape block.
@@ -980,9 +982,9 @@ components:
             Address text for a new feedback item. Address strings are not matched
             with current data, so existing addresses should use `id` instead.
         parking_location:
-          $ref: "#/components/schemas/feedback-location"
+          $ref: '#/components/schemas/feedback-location'
         door_location:
-          $ref: "#/components/schemas/feedback-location"
+          $ref: '#/components/schemas/feedback-location'
       additionalProperties: false
       allOf:
         - oneOf:
@@ -1008,7 +1010,7 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: "#/components/schemas/feedback-query"
+            $ref: '#/components/schemas/feedback-query'
       additionalProperties: false
     feedback-response:
       type: object

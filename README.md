@@ -85,3 +85,10 @@ And finally
 ```
 twine upload --repository pypi dist/*
 ```
+
+## Go
+
+```
+openapi-generator generate -i output.yaml -g go -o generated/go -c config/go.yaml
+```
+
