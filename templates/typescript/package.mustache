@@ -1,0 +1,41 @@
+{
+  "name": "{{{npmName}}}",
+  "version": "{{{npmVersion}}}",
+  "description": "SDK for Naurt's API",
+  "contributors": [
+    {
+        "name": "Indigo Curnick",
+        "url": "https://github.com/IndigoCurnick",
+        "email": "indigo.c@naurt.com"
+    },
+    {
+        "name": "Andrew Bowell",
+        "url": "https://github.com/AnBowell",
+        "email": "andrew.b@naurt.com"
+    }
+  ],
+  "licence": "MIT",
+  "homepage": "https://naurt.com",
+  "bugs": "https://github.com/Naurt-Ltd/api_specification/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Naurt-Ltd/api_specification"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^4.0 || ^5.0"
+  },
+  "keywords": ["api", "naurt"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}

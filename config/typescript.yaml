@@ -1,0 +1,8 @@
+npmName: "@naurt/api"
+npmVersion: 0.1.0
+
+disallowAdditionalPropertiesIfNotPresent: false
+
+licenseName: MIT
+
+platform: node

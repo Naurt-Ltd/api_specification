@@ -92,3 +92,8 @@ twine upload --repository pypi dist/*
 openapi-generator generate -i output.yaml -g go -o generated/go -c config/go.yaml
 ```
 
+## TypeScript
+
+```
+openapi-generator generate -i output.yaml -g typescript-fetch -o generated/typescript -c config/typescript.yaml -t templates/typescript
+```
