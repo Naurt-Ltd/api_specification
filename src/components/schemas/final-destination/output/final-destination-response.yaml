@@ -1,0 +1,18 @@
+description: |
+  A response from the API. The `responses` are in the same order as the original 
+  `queries` from the request.
+type: object
+additionalProperties: false
+required: [responses, version, request_id]
+properties:
+  responses:
+    type: array
+    items:
+      $ref: "./final-destination-hits.yaml"
+  logging:
+    $ref: "./final-destination-logging.yaml"
+  version:
+    type: string
+  request_id:
+    type: string
+    format: uuid

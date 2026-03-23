@@ -1,0 +1,8 @@
+type: object
+additionalProperties: false
+properties:
+  oneOf:
+    os_uprn:
+      type: boolean
+    os_udprn:
+      type: boolean

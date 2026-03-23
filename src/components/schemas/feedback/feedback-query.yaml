@@ -10,9 +10,9 @@ properties:
       Address text for a new feedback item. Address strings are not matched
       with current data, so existing addresses should use `id` instead.
   parking_location:
-    $ref: "./location.yaml"
+    $ref: "./feedback-location.yaml"
   door_location:
-    $ref: "./location.yaml"
+    $ref: "./feedback-location.yaml"
 additionalProperties: false
 allOf:
   - oneOf:

@@ -1,5 +1,5 @@
 tags: [Feedback]
-operationId: feedback/options
+operationId: feedback-options
 summary: Options
 responses:
   "200":

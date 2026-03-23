@@ -1,7 +1,10 @@
 openapi: 3.1.1
 info:
   title: Naurt API
-  version: v2.6.10
+  version: 0.1.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
   description: |
     OpenAPI specification for Naurt's APIs.
 servers:
@@ -16,7 +19,7 @@ paths:
     options:
       tags:
         - Final Destination
-      operationId: finaldestination/options
+      operationId: finaldestination-options
       summary: Options
       responses:
         '200':
@@ -28,7 +31,7 @@ paths:
     post:
       tags:
         - Final Destination
-      operationId: finaldestination/post
+      operationId: finaldestination-post
       summary: Post
       description: |
         Query the Naurt Final Destination dataset to retrieve precise destination
@@ -62,7 +65,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/v2-request'
+              $ref: '#/components/schemas/final-destination-request'
             examples:
               forward_geocode:
                 value:
@@ -111,9 +114,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/v2-response-feature-collection-style'
-                  - $ref: '#/components/schemas/v2-response-key-value-style'
+                $ref: '#/components/schemas/final-destination-response'
               examples:
                 feature_collection:
                   value:
@@ -169,7 +170,7 @@ paths:
       summary: Options
       description: |
         Returns the current API version and any deprecated versions.
-      operationId: rendezvous/options
+      operationId: rendezvous-options
       responses:
         '200':
           description: Endpoint metadata
@@ -198,7 +199,7 @@ paths:
 
         This is not a routing tool. It does not provide delivery order or route
         optimisation.
-      operationId: rendezvous/post
+      operationId: rendezvous-post
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -236,7 +237,7 @@ paths:
     options:
       tags:
         - Feedback
-      operationId: feedback/options
+      operationId: feedback-options
       summary: Options
       responses:
         '200':
@@ -259,7 +260,7 @@ paths:
         - provide new address records where parking or door data is not yet available
 
         A valid API key is required. Feedback submissions do not count against API usage.
-      operationId: feedback/post
+      operationId: feedback-post
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -323,6 +324,10 @@ components:
         `Authorization: nk_your_api_key_here`
   schemas:
     structured-address:
+      description: |
+        Naurt's own format for structured address data. Please see: 
+        https://docs.naurt.com/reference/address-structure/ for significant more 
+        details on this data format.
       type: object
       additionalProperties: false
       properties:
@@ -346,7 +351,14 @@ components:
           type: string
         postalcode:
           type: string
-    v2-location:
+    final-destination-location:
+      description: |
+        A location, using WGS84 latitude and longitude.
+
+        Used for a reverse geocode, or to add some location bias to a forward geocode.
+
+        Use `distance_filter` to optionally limit the distance from this point that 
+        results can appear within
       type: object
       additionalProperties: false
       required:
@@ -367,6 +379,8 @@ components:
           maximum: 25000
           default: 5000
     country:
+      description: |
+        An enum representing all possible countries that Naurt currently supports
       type: string
       enum:
         - AE
@@ -405,15 +419,23 @@ components:
         - US
         - UK
         - ZA
-    v2-source-search:
+    final-destination-source-id-request:
       type: object
       additionalProperties: false
       properties:
-        os_uprn:
-          type: string
-        os_udprn:
-          type: string
+        oneOf:
+          os_uprn:
+            type: boolean
+          os_udprn:
+            type: boolean
     language:
+      description: |
+        Used for reverse geocodes only, to decide which language the response is in. 
+        In a forward geocode, the response language will match the input language.
+
+        See: https://docs.naurt.com/reference/language/ for detailed information on 
+        language availability for all countries (not all countries have alternative 
+        languages)
       type: string
       enum:
         - Auto
@@ -433,7 +455,7 @@ components:
         - SL
         - CZ
       default: Auto
-    v2-query:
+    final-destination-query:
       type: object
       additionalProperties: false
       properties:
@@ -442,59 +464,92 @@ components:
         address_structured:
           $ref: '#/components/schemas/structured-address'
         location:
-          $ref: '#/components/schemas/v2-location'
+          $ref: '#/components/schemas/final-destination-location'
         id:
           type: string
           format: uuid
         country:
           $ref: '#/components/schemas/country'
         source_id:
-          $ref: '#/components/schemas/v2-source-search'
+          $ref: '#/components/schemas/final-destination-source-id-request'
         additional_matches:
           type: boolean
           default: false
         language:
           $ref: '#/components/schemas/language'
       description: |
-        A single search query. It can be used to either lookup a door and parking spot by:
-        - Address
-        - Location
-        - Naurt ID
-        - Source Address ID (E.g, OS UPRN)
+        A single search query. It can be used to lookup a door and parking spot by:
+        - Forward geocode
+        - Reverse geocode
+        - Structured geocode
+        - Naurt ID lookup
+        - Source ID lookup
     geojson-type:
+      description: |
+        Use this to switch between a key-value style GeoJSON or a classic GeoJSON
       type: string
       enum:
         - geojson
         - key_value
       default: geojson
     input-filter:
+      description: |
+        Input filtering helps when you have addresses from sources you can't control.
+        Sometimes, providers might miss out on important parts of addresses, like a
+        street number or postcode. If Naurt detects that an address is missing too 
+        many fields to be likely to give a good match, it can be rejected by this 
+        feature
+
+        `none` turns this feature off and does not do any input filtering. This may 
+        result in some poor responses
+
+        `loose` is the default - it does filter out some poor inputs but allows some 
+        missing fields 
+
+        `strict` is our strictest, and only allows searches which are likely to
+        produce good matches
       type: string
       enum:
         - none
         - loose
         - strict
       default: loose
-    v2-options:
-      type: object
+    final-destination-options:
+      description: |
+        `options` impact all `queries` within a request
+      ype: object
       additionalProperties: false
       properties:
         pretty_print:
           type: boolean
           default: false
+          description: |
+            This will format the response in a more human readable way. Only
+            recommended for debug, as it increases payload size
         verbose:
           type: boolean
           default: false
+          description: |
+            Returns additional debug information about request processing. Only 
+            recommended for debug, as it increases payload size
         structured_response:
           type: boolean
           default: false
+          description: |
+            Adds the Naurt structured format of the address to the response
         geojson_type:
           $ref: '#/components/schemas/geojson-type'
         return_original:
           type: boolean
           default: false
+          description: |
+            Returns your original query back in the response
         input_filter:
           $ref: '#/components/schemas/input-filter'
-    v2-request:
+    final-destination-request:
+      description: |
+        A single request to the API, which can contain up to 200 queries. Each query 
+        is independent and can be of a different type.
       type: object
       additionalProperties: false
       required:
@@ -505,9 +560,9 @@ components:
           minItems: 1
           maxItems: 200
           items:
-            $ref: '#/components/schemas/v2-query'
+            $ref: '#/components/schemas/final-destination-query'
         options:
-          $ref: '#/components/schemas/v2-options'
+          $ref: '#/components/schemas/final-destination-options'
     point:
       type: object
       required:
@@ -611,8 +666,8 @@ components:
     feature-collection:
       type: object
       required:
-        - type
         - features
+        - type
       properties:
         features:
           type: array
@@ -625,17 +680,55 @@ components:
           enum:
             - FeatureCollection
           default: FeatureCollection
-    v2-source-id-response:
+    key-value:
+      type: object
+      required:
+        - default_geocode
+      properties:
+        building:
+          $ref: '#/components/schemas/polygon'
+        default_geocode:
+          $ref: '#/components/schemas/point'
+        entrance:
+          $ref: '#/components/schemas/multipoint'
+        parking:
+          $ref: '#/components/schemas/polygon'
+    final-destination-search-confidence:
+      description: |
+        Confidence score in the range 0.0 to 1.0 indicating how well the result 
+        matches the query. Higher is better.
+
+        See: https://docs.naurt.com/reference/search-confidence
+
+        Not to be confused with Accuracy, which is how good the data itself is. This 
+        is about the likelihood of a good match.
+      example: 0.93
+      type: number
+      format: double
+      minimum: 0
+      maximum: 1
+    final-destination-source-id-response:
+      description: |
+        An object containing information on source IDs. Source IDs refer to underlying
+        IDs from address data sets. Currently supporting UPRN and UDPRN in the UK 
+        referring to the OrdnanceSurvey datasets
+      example:
+        UPRN:
+          value:
+            os_uprn: '100062664604'
+        UDPRN:
+          value:
+            os_udprn: '25962203'
       type: object
       additionalProperties: false
       properties:
         os_uprn:
-          oneOf:
-            - type: string
-            - type: 'null'
-    v2-poi-response-feature-collection-style:
+          type: string
+        os_udprn:
+          type: string
+    final-destination-hit:
       type: object
-      title: Feature Collection Style
+      title: Final Destination Hit
       additionalProperties: false
       required:
         - id
@@ -648,24 +741,28 @@ components:
         address:
           type: string
         geojson:
-          $ref: '#/components/schemas/feature-collection'
+          oneOf:
+            - $ref: '#/components/schemas/feature-collection'
+            - $ref: '#/components/schemas/key-value'
         distance:
           type: number
         search_confidence:
-          type: number
-          format: double
-          minimum: 0
-          maximum: 1
+          $ref: '#/components/schemas/final-destination-search-confidence'
         structured_response:
           $ref: '#/components/schemas/structured-address'
         source_id:
-          $ref: '#/components/schemas/v2-source-id-response'
-    v2-status:
+          $ref: '#/components/schemas/final-destination-source-id-response'
+    final-destination-status:
+      description: |
+        The `queries` and `responses` arrays are always 1:1. If no match can be found,
+        a 404 will NOT be returned. Instead, check this enum for `no_matches`. That 
+        indicates no error has happened, but nothing was found. `ok` when something is
+        found.
       type: string
       enum:
         - ok
         - no_matches
-    v2-search-response-feature-collection-style:
+    final-destination-hits:
       type: object
       additionalProperties: false
       required:
@@ -675,19 +772,17 @@ components:
       properties:
         best_match:
           oneOf:
-            - $ref: '#/components/schemas/v2-poi-response-feature-collection-style'
+            - $ref: '#/components/schemas/final-destination-hit'
             - type: 'null'
         additional_matches:
           type: array
           items:
-            $ref: '#/components/schemas/v2-poi-response-feature-collection-style'
+            $ref: '#/components/schemas/final-destination-hit'
         status:
-          $ref: '#/components/schemas/v2-status'
+          $ref: '#/components/schemas/final-destination-status'
         original_request:
-          oneOf:
-            - $ref: '#/components/schemas/v2-query'
-            - type: 'null'
-    v2-logging:
+          $ref: '#/components/schemas/final-destination-query'
+    final-destination-logging:
       type: object
       additionalProperties: false
       properties:
@@ -703,7 +798,10 @@ components:
           type: array
           items:
             type: string
-    v2-response-feature-collection-style:
+    final-destination-response:
+      description: |
+        A response from the API. The `responses` are in the same order as the original 
+        `queries` from the request.
       type: object
       additionalProperties: false
       required:
@@ -714,87 +812,9 @@ components:
         responses:
           type: array
           items:
-            $ref: '#/components/schemas/v2-search-response-feature-collection-style'
+            $ref: '#/components/schemas/final-destination-hits'
         logging:
-          $ref: '#/components/schemas/v2-logging'
-        version:
-          type: string
-        request_id:
-          type: string
-          format: uuid
-    v2-poi-response-key-value-style:
-      type: object
-      title: Key Value Style
-      additionalProperties: false
-      required:
-        - id
-        - address
-        - geojson
-      properties:
-        id:
-          type: string
-          format: uuid
-        address:
-          type: string
-        geojson:
-          type: object
-          properties:
-            building:
-              $ref: '#/components/schemas/polygon'
-            default_geocode:
-              $ref: '#/components/schemas/point'
-            entrance:
-              $ref: '#/components/schemas/multipoint'
-            parking:
-              $ref: '#/components/schemas/polygon'
-        distance:
-          type: number
-          format: double
-        search_confidence:
-          type: number
-          format: double
-          minimum: 0
-          maximum: 1
-        structured_response:
-          $ref: '#/components/schemas/structured-address'
-        source_id:
-          $ref: '#/components/schemas/v2-source-id-response'
-    v2-search-response-key-value-style:
-      type: object
-      additionalProperties: false
-      required:
-        - best_match
-        - additional_matches
-        - status
-      properties:
-        best_match:
-          oneOf:
-            - $ref: '#/components/schemas/v2-poi-response-key-value-style'
-            - type: 'null'
-        additional_matches:
-          type: array
-          items:
-            $ref: '#/components/schemas/v2-poi-response-key-value-style'
-        status:
-          $ref: '#/components/schemas/v2-status'
-        original_request:
-          oneOf:
-            - $ref: '#/components/schemas/v2-query'
-            - type: 'null'
-    v2-response-key-value-style:
-      type: object
-      additionalProperties: false
-      required:
-        - responses
-        - version
-        - request_id
-      properties:
-        responses:
-          type: array
-          items:
-            $ref: '#/components/schemas/v2-search-response-key-value-style'
-        logging:
-          $ref: '#/components/schemas/v2-logging'
+          $ref: '#/components/schemas/final-destination-logging'
         version:
           type: string
         request_id:
@@ -802,6 +822,14 @@ components:
           format: uuid
     error-response:
       type: object
+      description: |
+        All Naurt errors come in this standard format. 
+
+        `code` is a unique error code you can quote to support, should you need to
+
+        `reason` explains why this error has been received
+
+        `remediation` gives steps to help resolve this error
       additionalProperties: false
       required:
         - code
@@ -881,9 +909,7 @@ components:
         geojson:
           $ref: '#/components/schemas/feature-collection'
         distance:
-          type:
-            - number
-            - 'null'
+          type: number
           format: float
           description: |
             Distance in metres from the searched latitude/longitude.
@@ -930,7 +956,7 @@ components:
             Request identifier useful when reporting issues to Naurt.
             Mentioned in the prose docs, though not shown in the response shape block.
       additionalProperties: false
-    location:
+    feedback-location:
       type: object
       required:
         - latitude
@@ -956,9 +982,9 @@ components:
             Address text for a new feedback item. Address strings are not matched
             with current data, so existing addresses should use `id` instead.
         parking_location:
-          $ref: '#/components/schemas/location'
+          $ref: '#/components/schemas/feedback-location'
         door_location:
-          $ref: '#/components/schemas/location'
+          $ref: '#/components/schemas/feedback-location'
       additionalProperties: false
       allOf:
         - oneOf:

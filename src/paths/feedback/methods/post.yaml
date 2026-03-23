@@ -10,7 +10,7 @@ description: |
   - provide new address records where parking or door data is not yet available
 
   A valid API key is required. Feedback submissions do not count against API usage.
-operationId: feedback/post
+operationId: feedback-post
 security:
   - ApiKeyAuth: []
 requestBody:

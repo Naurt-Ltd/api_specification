@@ -1,0 +1,28 @@
+type: object
+additionalProperties: false
+properties:
+  address_string:
+    type: string
+  address_structured:
+    $ref: "./../../general/structured-address.yaml"
+  location:
+    $ref: "./final-destination-location.yaml"
+  id:
+    type: string
+    format: uuid
+  country:
+    $ref: ./../../general/country.yaml
+  source_id:
+    $ref: "./final-destination-source-id-request.yaml"
+  additional_matches:
+    type: boolean
+    default: false
+  language:
+    $ref: "./../../general/language.yaml"
+description: |
+  A single search query. It can be used to lookup a door and parking spot by:
+  - Forward geocode
+  - Reverse geocode
+  - Structured geocode
+  - Naurt ID lookup
+  - Source ID lookup

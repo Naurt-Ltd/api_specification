@@ -1,0 +1,24 @@
+description: |
+  A location, using WGS84 latitude and longitude.
+
+  Used for a reverse geocode, or to add some location bias to a forward geocode.
+
+  Use `distance_filter` to optionally limit the distance from this point that 
+  results can appear within
+type: object
+additionalProperties: false
+required: [latitude, longitude]
+properties:
+  latitude:
+    type: number
+    minimum: -90
+    maximum: 90
+  longitude:
+    type: number
+    minimum: -180
+    exclusiveMaximum: 180
+  distance_filter:
+    type: number
+    exclusiveMinimum: 0
+    maximum: 25000
+    default: 5000

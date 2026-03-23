@@ -1,3 +1,7 @@
+description: |
+  Naurt's own format for structured address data. Please see: 
+  https://docs.naurt.com/reference/address-structure/ for significant more 
+  details on this data format.
 type: object
 additionalProperties: false
 properties:

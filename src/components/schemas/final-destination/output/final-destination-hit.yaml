@@ -1,0 +1,25 @@
+type: object
+title: Final Destination Hit
+additionalProperties: false
+required:
+  - id
+  - address
+  - geojson
+properties:
+  id:
+    type: string
+    format: uuid
+  address:
+    type: string
+  geojson:
+    oneOf:
+      - $ref: "./../../general/geojson/feature-collection.yaml"
+      - $ref: "./../../general/geojson/key-value.yaml"
+  distance:
+    type: number
+  search_confidence:
+    $ref: "./final-destination-search-confidence.yaml"
+  structured_response:
+    $ref: "./../../general/structured-address.yaml"
+  source_id:
+    $ref: "./final-destination-source-id-response.yaml"

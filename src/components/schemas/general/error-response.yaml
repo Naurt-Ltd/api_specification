@@ -1,4 +1,12 @@
 type: object
+description: |
+  All Naurt errors come in this standard format. 
+
+  `code` is a unique error code you can quote to support, should you need to
+
+  `reason` explains why this error has been received
+
+  `remediation` gives steps to help resolve this error
 additionalProperties: false
 required: [code, reason, remediation]
 properties:

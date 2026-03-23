@@ -1,3 +1,5 @@
+description: |
+  An enum representing all possible countries that Naurt currently supports
 type: string
 enum:
   - AE

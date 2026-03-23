@@ -2,7 +2,7 @@ tags: [Rendezvous]
 summary: Options
 description: |
   Returns the current API version and any deprecated versions.
-operationId: rendezvous/options
+operationId: rendezvous-options
 responses:
   "200":
     description: Endpoint metadata

@@ -6,7 +6,7 @@ description: |
 
   This is not a routing tool. It does not provide delivery order or route
   optimisation.
-operationId: rendezvous/post
+operationId: rendezvous-post
 security:
   - ApiKeyAuth: []
 requestBody:

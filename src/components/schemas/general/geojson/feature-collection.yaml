@@ -1,5 +1,5 @@
 type: object
-required: [type, features]
+required: [features, type]
 properties:
   features:
     type: array
