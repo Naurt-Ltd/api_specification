@@ -6,6 +6,7 @@ enum:
   - AU
   - AT
   - BE
+  - BH
   - BR
   - CA
   - CH
@@ -22,6 +23,7 @@ enum:
   - IM
   - IT
   - JE
+  - JO
   - JP
   - KR
   - LU
@@ -30,6 +32,7 @@ enum:
   - NZ
   - PL
   - PT
+  - QA
   - SA
   - SE
   - SI

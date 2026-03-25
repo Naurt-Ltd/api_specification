@@ -12,10 +12,10 @@ from ..models.feature_type import FeatureType
 from typing import cast
 
 if TYPE_CHECKING:
-  from ..models.feature_properties import FeatureProperties
   from ..models.polygon import Polygon
-  from ..models.point import Point
   from ..models.multipoint import Multipoint
+  from ..models.point import Point
+  from ..models.feature_properties import FeatureProperties
 
 
 
@@ -44,10 +44,10 @@ class Feature:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.feature_properties import FeatureProperties
         from ..models.polygon import Polygon
-        from ..models.point import Point
         from ..models.multipoint import Multipoint
+        from ..models.point import Point
+        from ..models.feature_properties import FeatureProperties
         geometry: dict[str, Any]
         if isinstance(self.geometry, Point):
             geometry = self.geometry.to_dict()
@@ -76,10 +76,10 @@ class Feature:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.feature_properties import FeatureProperties
         from ..models.polygon import Polygon
-        from ..models.point import Point
         from ..models.multipoint import Multipoint
+        from ..models.point import Point
+        from ..models.feature_properties import FeatureProperties
         d = dict(src_dict)
         def _parse_geometry(data: object) -> Multipoint | Point | Polygon:
             try:

@@ -86,4 +86,3 @@ src/models/RendezvousResponse.ts
 src/models/StructuredAddress.ts
 src/models/index.ts
 src/runtime.ts
-tsconfig.json

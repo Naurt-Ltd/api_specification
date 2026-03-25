@@ -97,3 +97,11 @@ openapi-generator generate -i output.yaml -g go -o generated/go -c config/go.yam
 ```
 openapi-generator generate -i output.yaml -g typescript-fetch -o generated/typescript -c config/typescript.yaml -t templates/typescript
 ```
+
+```
+npm config set //registry.npmjs.org/:_authToken=<YOUR TOKEN HERE>
+```
+
+```
+npm publish --public
+```

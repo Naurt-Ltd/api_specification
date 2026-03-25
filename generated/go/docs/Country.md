@@ -11,6 +11,8 @@
 
 * `BE` (value: `"BE"`)
 
+* `BH` (value: `"BH"`)
+
 * `BR` (value: `"BR"`)
 
 * `CA` (value: `"CA"`)
@@ -43,6 +45,8 @@
 
 * `JE` (value: `"JE"`)
 
+* `JO` (value: `"JO"`)
+
 * `JP` (value: `"JP"`)
 
 * `KR` (value: `"KR"`)
@@ -58,6 +62,8 @@
 * `PL` (value: `"PL"`)
 
 * `PT` (value: `"PT"`)
+
+* `QA` (value: `"QA"`)
 
 * `SA` (value: `"SA"`)
 

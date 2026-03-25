@@ -1,6 +1,6 @@
 [package]
 name = "naurt-api"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     "Indigo Curnick <indigo.c@naurt.com>",
     "Andrew Bowell <andrew.b@naurt.com>",

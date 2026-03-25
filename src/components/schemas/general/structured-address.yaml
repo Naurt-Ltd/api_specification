@@ -2,6 +2,9 @@ description: |
   Naurt's own format for structured address data. Please see: 
   https://docs.naurt.com/reference/address-structure/ for significant more 
   details on this data format.
+
+  When searching, do not use `country_code` - as it is not used. `country_code`
+  is for responses only.
 type: object
 additionalProperties: false
 properties:
@@ -25,3 +28,5 @@ properties:
     type: string
   postalcode:
     type: string
+  country_code:
+    $ref: "./country.yaml"

@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **state** | Option<**String**> |  | [optional]
 **country** | Option<**String**> |  | [optional]
 **postalcode** | Option<**String**> |  | [optional]
+**country_code** | Option<[**models::Country**](Country.md)> |  | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -8,6 +8,7 @@
 | Au | AU |
 | At | AT |
 | Be | BE |
+| Bh | BH |
 | Br | BR |
 | Ca | CA |
 | Ch | CH |
@@ -24,6 +25,7 @@
 | Im | IM |
 | It | IT |
 | Je | JE |
+| Jo | JO |
 | Jp | JP |
 | Kr | KR |
 | Lu | LU |
@@ -32,6 +34,7 @@
 | Nz | NZ |
 | Pl | PL |
 | Pt | PT |
+| Qa | QA |
 | Sa | SA |
 | Se | SE |
 | Si | SI |

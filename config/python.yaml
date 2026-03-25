@@ -1,5 +1,5 @@
 package_name: naurt_api
-package_version: 0.1.0
+package_version: 0.1.1
 project_name: naurt-api
 package_name_override: naurt_api
 project_name_override: naurt_api

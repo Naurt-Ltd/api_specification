@@ -8,6 +8,7 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
+from ..models.country import Country
 from ..types import UNSET, Unset
 
 
@@ -25,6 +26,9 @@ class StructuredAddress:
     https://docs.naurt.com/reference/address-structure/ for significant more
     details on this data format.
 
+    When searching, do not use `country_code` - as it is not used. `country_code`
+    is for responses only.
+
         Attributes:
             unit (str | Unset):
             house_name (str | Unset):
@@ -36,6 +40,7 @@ class StructuredAddress:
             state (str | Unset):
             country (str | Unset):
             postalcode (str | Unset):
+            country_code (Country | Unset): An enum representing all possible countries that Naurt currently supports
      """
 
     unit: str | Unset = UNSET
@@ -48,6 +53,7 @@ class StructuredAddress:
     state: str | Unset = UNSET
     country: str | Unset = UNSET
     postalcode: str | Unset = UNSET
+    country_code: Country | Unset = UNSET
 
 
 
@@ -74,6 +80,11 @@ class StructuredAddress:
 
         postalcode = self.postalcode
 
+        country_code: str | Unset = UNSET
+        if not isinstance(self.country_code, Unset):
+            country_code = self.country_code.value
+
+
 
         field_dict: dict[str, Any] = {}
 
@@ -99,6 +110,8 @@ class StructuredAddress:
             field_dict["country"] = country
         if postalcode is not UNSET:
             field_dict["postalcode"] = postalcode
+        if country_code is not UNSET:
+            field_dict["country_code"] = country_code
 
         return field_dict
 
@@ -127,6 +140,16 @@ class StructuredAddress:
 
         postalcode = d.pop("postalcode", UNSET)
 
+        _country_code = d.pop("country_code", UNSET)
+        country_code: Country | Unset
+        if isinstance(_country_code,  Unset):
+            country_code = UNSET
+        else:
+            country_code = Country(_country_code)
+
+
+
+
         structured_address = cls(
             unit=unit,
             house_name=house_name,
@@ -138,6 +161,7 @@ class StructuredAddress:
             state=state,
             country=country,
             postalcode=postalcode,
+            country_code=country_code,
         )
 
         return structured_address

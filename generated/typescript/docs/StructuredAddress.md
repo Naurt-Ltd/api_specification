@@ -1,7 +1,7 @@
 
 # StructuredAddress
 
-Naurt\'s own format for structured address data. Please see:  https://docs.naurt.com/reference/address-structure/ for significant more  details on this data format. 
+Naurt\'s own format for structured address data. Please see:  https://docs.naurt.com/reference/address-structure/ for significant more  details on this data format.  When searching, do not use `country_code` - as it is not used. `country_code` is for responses only. 
 
 ## Properties
 
@@ -17,6 +17,7 @@ Name | Type
 `state` | string
 `country` | string
 `postalcode` | string
+`countryCode` | [Country](Country.md)
 
 ## Example
 
@@ -35,6 +36,7 @@ const example = {
   "state": null,
   "country": null,
   "postalcode": null,
+  "countryCode": null,
 } satisfies StructuredAddress
 
 console.log(example)

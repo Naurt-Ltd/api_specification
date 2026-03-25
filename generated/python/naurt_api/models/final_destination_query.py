@@ -15,9 +15,9 @@ from typing import cast
 from uuid import UUID
 
 if TYPE_CHECKING:
-  from ..models.structured_address import StructuredAddress
-  from ..models.final_destination_location import FinalDestinationLocation
   from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
+  from ..models.final_destination_location import FinalDestinationLocation
+  from ..models.structured_address import StructuredAddress
 
 
 
@@ -41,6 +41,9 @@ class FinalDestinationQuery:
             address_structured (StructuredAddress | Unset): Naurt's own format for structured address data. Please see:
                 https://docs.naurt.com/reference/address-structure/ for significant more
                 details on this data format.
+
+                When searching, do not use `country_code` - as it is not used. `country_code`
+                is for responses only.
             location (FinalDestinationLocation | Unset): A location, using WGS84 latitude and longitude.
 
                 Used for a reverse geocode, or to add some location bias to a forward geocode.
@@ -73,9 +76,9 @@ class FinalDestinationQuery:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.structured_address import StructuredAddress
-        from ..models.final_destination_location import FinalDestinationLocation
         from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
+        from ..models.final_destination_location import FinalDestinationLocation
+        from ..models.structured_address import StructuredAddress
         address_string = self.address_string
 
         address_structured: dict[str, Any] | Unset = UNSET
@@ -134,9 +137,9 @@ class FinalDestinationQuery:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.structured_address import StructuredAddress
-        from ..models.final_destination_location import FinalDestinationLocation
         from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
+        from ..models.final_destination_location import FinalDestinationLocation
+        from ..models.structured_address import StructuredAddress
         d = dict(src_dict)
         address_string = d.pop("address_string", UNSET)
 

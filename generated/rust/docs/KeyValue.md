@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **building** | Option<[**models::Polygon**](Polygon.md)> |  | [optional]
-**default_geocode** | Option<[**models::Point**](Point.md)> |  | [optional]
+**default_geocode** | [**models::Point**](Point.md) |  | 
 **entrance** | Option<[**models::Multipoint**](Multipoint.md)> |  | [optional]
 **parking** | Option<[**models::Polygon**](Polygon.md)> |  | [optional]
 

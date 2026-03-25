@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Naurt API
-  version: 0.1.0
+  version: 0.1.1
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -323,11 +323,58 @@ components:
         Example:
         `Authorization: nk_your_api_key_here`
   schemas:
+    country:
+      description: |
+        An enum representing all possible countries that Naurt currently supports
+      type: string
+      enum:
+        - AE
+        - AU
+        - AT
+        - BE
+        - BH
+        - BR
+        - CA
+        - CH
+        - CZ
+        - DE
+        - EG
+        - ES
+        - FI
+        - FR
+        - GB
+        - GG
+        - HK
+        - IE
+        - IM
+        - IT
+        - JE
+        - JO
+        - JP
+        - KR
+        - LU
+        - NL
+        - 'NO'
+        - NZ
+        - PL
+        - PT
+        - QA
+        - SA
+        - SE
+        - SI
+        - SG
+        - TW
+        - US
+        - UK
+        - ZA
     structured-address:
       description: |
         Naurt's own format for structured address data. Please see: 
         https://docs.naurt.com/reference/address-structure/ for significant more 
         details on this data format.
+
+        When searching, do not use `country_code` - as it is not used. `country_code`
+        is for responses only.
       type: object
       additionalProperties: false
       properties:
@@ -351,6 +398,8 @@ components:
           type: string
         postalcode:
           type: string
+        country_code:
+          $ref: '#/components/schemas/country'
     final-destination-location:
       description: |
         A location, using WGS84 latitude and longitude.
@@ -378,47 +427,6 @@ components:
           exclusiveMinimum: 0
           maximum: 25000
           default: 5000
-    country:
-      description: |
-        An enum representing all possible countries that Naurt currently supports
-      type: string
-      enum:
-        - AE
-        - AU
-        - AT
-        - BE
-        - BR
-        - CA
-        - CH
-        - CZ
-        - DE
-        - EG
-        - ES
-        - FI
-        - FR
-        - GB
-        - GG
-        - HK
-        - IE
-        - IM
-        - IT
-        - JE
-        - JP
-        - KR
-        - LU
-        - NL
-        - 'NO'
-        - NZ
-        - PL
-        - PT
-        - SA
-        - SE
-        - SI
-        - SG
-        - TW
-        - US
-        - UK
-        - ZA
     final-destination-source-id-request:
       type: object
       additionalProperties: false

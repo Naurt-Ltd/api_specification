@@ -13,9 +13,9 @@ from typing import cast
 from uuid import UUID
 
 if TYPE_CHECKING:
+  from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
   from ..models.feature_collection import FeatureCollection
   from ..models.structured_address import StructuredAddress
-  from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
   from ..models.key_value import KeyValue
 
 
@@ -45,6 +45,9 @@ class FinalDestinationHit:
             structured_response (StructuredAddress | Unset): Naurt's own format for structured address data. Please see:
                 https://docs.naurt.com/reference/address-structure/ for significant more
                 details on this data format.
+
+                When searching, do not use `country_code` - as it is not used. `country_code`
+                is for responses only.
             source_id (FinalDestinationSourceIdResponse | Unset): An object containing information on source IDs. Source IDs
                 refer to underlying
                 IDs from address data sets. Currently supporting UPRN and UDPRN in the UK
@@ -65,9 +68,9 @@ class FinalDestinationHit:
 
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
         from ..models.feature_collection import FeatureCollection
         from ..models.structured_address import StructuredAddress
-        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
         from ..models.key_value import KeyValue
         id = str(self.id)
 
@@ -115,9 +118,9 @@ class FinalDestinationHit:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
         from ..models.feature_collection import FeatureCollection
         from ..models.structured_address import StructuredAddress
-        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
         from ..models.key_value import KeyValue
         d = dict(src_dict)
         id = UUID(d.pop("id"))

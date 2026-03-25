@@ -6,7 +6,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
   title: Naurt API
-  version: 0.1.0
+  version: 0.1.1
 servers:
 - url: https://api.naurt.net
 security:
@@ -313,13 +313,59 @@ paths:
       - Feedback
 components:
   schemas:
+    country:
+      description: |
+        An enum representing all possible countries that Naurt currently supports
+      enum:
+      - AE
+      - AU
+      - AT
+      - BE
+      - BH
+      - BR
+      - CA
+      - CH
+      - CZ
+      - DE
+      - EG
+      - ES
+      - FI
+      - FR
+      - GB
+      - GG
+      - HK
+      - IE
+      - IM
+      - IT
+      - JE
+      - JO
+      - JP
+      - KR
+      - LU
+      - NL
+      - "NO"
+      - NZ
+      - PL
+      - PT
+      - QA
+      - SA
+      - SE
+      - SI
+      - SG
+      - TW
+      - US
+      - UK
+      - ZA
+      type: string
     structured-address:
       additionalProperties: false
       description: "Naurt's own format for structured address data. Please see: \n\
         https://docs.naurt.com/reference/address-structure/ for significant more \n\
-        details on this data format.\n"
+        details on this data format.\n\nWhen searching, do not use `country_code`\
+        \ - as it is not used. `country_code`\nis for responses only.\n"
       example:
         country: country
+        country_code: AE
         unit: unit
         house_name: house_name
         city: city
@@ -350,6 +396,8 @@ components:
           type: string
         postalcode:
           type: string
+        country_code:
+          $ref: "#/components/schemas/country"
     final-destination-location:
       additionalProperties: false
       description: "A location, using WGS84 latitude and longitude.\n\nUsed for a\
@@ -379,47 +427,6 @@ components:
       required:
       - latitude
       - longitude
-    country:
-      description: |
-        An enum representing all possible countries that Naurt currently supports
-      enum:
-      - AE
-      - AU
-      - AT
-      - BE
-      - BR
-      - CA
-      - CH
-      - CZ
-      - DE
-      - EG
-      - ES
-      - FI
-      - FR
-      - GB
-      - GG
-      - HK
-      - IE
-      - IM
-      - IT
-      - JE
-      - JP
-      - KR
-      - LU
-      - NL
-      - "NO"
-      - NZ
-      - PL
-      - PT
-      - SA
-      - SE
-      - SI
-      - SG
-      - TW
-      - US
-      - UK
-      - ZA
-      type: string
     final-destination-source-id-request:
       additionalProperties: false
       example:
@@ -465,7 +472,7 @@ components:
         - Naurt ID lookup
         - Source ID lookup
       example:
-        country: AE
+        country: null
         address_string: address_string
         location:
           distance_filter: 5755.339717336913
@@ -477,6 +484,7 @@ components:
           oneOf: ""
         address_structured:
           country: country
+          country_code: AE
           unit: unit
           house_name: house_name
           city: city
@@ -856,6 +864,7 @@ components:
               os_udprn: "25962203"
         structured_response:
           country: country
+          country_code: AE
           unit: unit
           house_name: house_name
           city: city
@@ -907,7 +916,7 @@ components:
       additionalProperties: false
       example:
         original_request:
-          country: AE
+          country: null
           address_string: address_string
           location:
             distance_filter: 5755.339717336913
@@ -919,6 +928,7 @@ components:
             oneOf: ""
           address_structured:
             country: country
+            country_code: AE
             unit: unit
             house_name: house_name
             city: city
@@ -991,6 +1001,7 @@ components:
                 os_udprn: "25962203"
           structured_response:
             country: country
+            country_code: AE
             unit: unit
             house_name: house_name
             city: city
@@ -1060,6 +1071,7 @@ components:
                 os_udprn: "25962203"
           structured_response:
             country: country
+            country_code: AE
             unit: unit
             house_name: house_name
             city: city
@@ -1119,7 +1131,7 @@ components:
       example:
         responses:
         - original_request:
-            country: AE
+            country: null
             address_string: address_string
             location:
               distance_filter: 5755.339717336913
@@ -1131,6 +1143,7 @@ components:
               oneOf: ""
             address_structured:
               country: country
+              country_code: AE
               unit: unit
               house_name: house_name
               city: city
@@ -1203,6 +1216,7 @@ components:
                   os_udprn: "25962203"
             structured_response:
               country: country
+              country_code: AE
               unit: unit
               house_name: house_name
               city: city
@@ -1272,6 +1286,7 @@ components:
                   os_udprn: "25962203"
             structured_response:
               country: country
+              country_code: AE
               unit: unit
               house_name: house_name
               city: city
@@ -1283,7 +1298,7 @@ components:
               street_name: street_name
           status: ok
         - original_request:
-            country: AE
+            country: null
             address_string: address_string
             location:
               distance_filter: 5755.339717336913
@@ -1295,6 +1310,7 @@ components:
               oneOf: ""
             address_structured:
               country: country
+              country_code: AE
               unit: unit
               house_name: house_name
               city: city
@@ -1367,6 +1383,7 @@ components:
                   os_udprn: "25962203"
             structured_response:
               country: country
+              country_code: AE
               unit: unit
               house_name: house_name
               city: city
@@ -1436,6 +1453,7 @@ components:
                   os_udprn: "25962203"
             structured_response:
               country: country
+              country_code: AE
               unit: unit
               house_name: house_name
               city: city

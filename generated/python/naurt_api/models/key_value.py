@@ -13,8 +13,8 @@ from typing import cast
 
 if TYPE_CHECKING:
   from ..models.polygon import Polygon
-  from ..models.point import Point
   from ..models.multipoint import Multipoint
+  from ..models.point import Point
 
 
 
@@ -28,14 +28,14 @@ T = TypeVar("T", bound="KeyValue")
 class KeyValue:
     """ 
         Attributes:
+            default_geocode (Point):
             building (Polygon | Unset):
-            default_geocode (Point | Unset):
             entrance (Multipoint | Unset):
             parking (Polygon | Unset):
      """
 
+    default_geocode: Point
     building: Polygon | Unset = UNSET
-    default_geocode: Point | Unset = UNSET
     entrance: Multipoint | Unset = UNSET
     parking: Polygon | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -46,15 +46,13 @@ class KeyValue:
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.polygon import Polygon
-        from ..models.point import Point
         from ..models.multipoint import Multipoint
+        from ..models.point import Point
+        default_geocode = self.default_geocode.to_dict()
+
         building: dict[str, Any] | Unset = UNSET
         if not isinstance(self.building, Unset):
             building = self.building.to_dict()
-
-        default_geocode: dict[str, Any] | Unset = UNSET
-        if not isinstance(self.default_geocode, Unset):
-            default_geocode = self.default_geocode.to_dict()
 
         entrance: dict[str, Any] | Unset = UNSET
         if not isinstance(self.entrance, Unset):
@@ -68,11 +66,10 @@ class KeyValue:
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({
+            "default_geocode": default_geocode,
         })
         if building is not UNSET:
             field_dict["building"] = building
-        if default_geocode is not UNSET:
-            field_dict["default_geocode"] = default_geocode
         if entrance is not UNSET:
             field_dict["entrance"] = entrance
         if parking is not UNSET:
@@ -85,25 +82,20 @@ class KeyValue:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.polygon import Polygon
-        from ..models.point import Point
         from ..models.multipoint import Multipoint
+        from ..models.point import Point
         d = dict(src_dict)
+        default_geocode = Point.from_dict(d.pop("default_geocode"))
+
+
+
+
         _building = d.pop("building", UNSET)
         building: Polygon | Unset
         if isinstance(_building,  Unset):
             building = UNSET
         else:
             building = Polygon.from_dict(_building)
-
-
-
-
-        _default_geocode = d.pop("default_geocode", UNSET)
-        default_geocode: Point | Unset
-        if isinstance(_default_geocode,  Unset):
-            default_geocode = UNSET
-        else:
-            default_geocode = Point.from_dict(_default_geocode)
 
 
 
@@ -129,8 +121,8 @@ class KeyValue:
 
 
         key_value = cls(
-            building=building,
             default_geocode=default_geocode,
+            building=building,
             entrance=entrance,
             parking=parking,
         )
