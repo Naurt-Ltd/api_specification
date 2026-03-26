@@ -4,7 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**OneOf** | Pointer to **interface{}** |  | [optional] 
+**OsUprn** | Pointer to **string** |  | [optional] 
+**OsUdprn** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -25,41 +26,56 @@ NewFinalDestinationSourceIdRequestWithDefaults instantiates a new FinalDestinati
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetOneOf
+### GetOsUprn
 
-`func (o *FinalDestinationSourceIdRequest) GetOneOf() interface{}`
+`func (o *FinalDestinationSourceIdRequest) GetOsUprn() string`
 
-GetOneOf returns the OneOf field if non-nil, zero value otherwise.
+GetOsUprn returns the OsUprn field if non-nil, zero value otherwise.
 
-### GetOneOfOk
+### GetOsUprnOk
 
-`func (o *FinalDestinationSourceIdRequest) GetOneOfOk() (*interface{}, bool)`
+`func (o *FinalDestinationSourceIdRequest) GetOsUprnOk() (*string, bool)`
 
-GetOneOfOk returns a tuple with the OneOf field if it's non-nil, zero value otherwise
+GetOsUprnOk returns a tuple with the OsUprn field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetOneOf
+### SetOsUprn
 
-`func (o *FinalDestinationSourceIdRequest) SetOneOf(v interface{})`
+`func (o *FinalDestinationSourceIdRequest) SetOsUprn(v string)`
 
-SetOneOf sets OneOf field to given value.
+SetOsUprn sets OsUprn field to given value.
 
-### HasOneOf
+### HasOsUprn
 
-`func (o *FinalDestinationSourceIdRequest) HasOneOf() bool`
+`func (o *FinalDestinationSourceIdRequest) HasOsUprn() bool`
 
-HasOneOf returns a boolean if a field has been set.
+HasOsUprn returns a boolean if a field has been set.
 
-### SetOneOfNil
+### GetOsUdprn
 
-`func (o *FinalDestinationSourceIdRequest) SetOneOfNil(b bool)`
+`func (o *FinalDestinationSourceIdRequest) GetOsUdprn() string`
 
- SetOneOfNil sets the value for OneOf to be an explicit nil
+GetOsUdprn returns the OsUdprn field if non-nil, zero value otherwise.
 
-### UnsetOneOf
-`func (o *FinalDestinationSourceIdRequest) UnsetOneOf()`
+### GetOsUdprnOk
 
-UnsetOneOf ensures that no value is present for OneOf, not even an explicit nil
+`func (o *FinalDestinationSourceIdRequest) GetOsUdprnOk() (*string, bool)`
+
+GetOsUdprnOk returns a tuple with the OsUdprn field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOsUdprn
+
+`func (o *FinalDestinationSourceIdRequest) SetOsUdprn(v string)`
+
+SetOsUdprn sets OsUdprn field to given value.
+
+### HasOsUdprn
+
+`func (o *FinalDestinationSourceIdRequest) HasOsUdprn() bool`
+
+HasOsUdprn returns a boolean if a field has been set.
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

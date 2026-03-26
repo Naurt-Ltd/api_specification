@@ -1,7 +1,7 @@
 openapi: 3.1.1
 info:
   title: Naurt API
-  version: 0.1.1
+  version: 0.1.2
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -431,11 +431,12 @@ components:
       type: object
       additionalProperties: false
       properties:
-        oneOf:
-          os_uprn:
-            type: boolean
-          os_udprn:
-            type: boolean
+        os_uprn:
+          type: string
+        os_udprn:
+          type: string
+      minProperties: 1
+      maxProperties: 1
     language:
       description: |
         Used for reverse geocodes only, to decide which language the response is in. 

@@ -1,5 +1,5 @@
 packageName: naurt_api
-packageVersion: 0.1.1
+packageVersion: 0.1.2
 
 enumClassPrefix: true
 isGoSubmodule: false

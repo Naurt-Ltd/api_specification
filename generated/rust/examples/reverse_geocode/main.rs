@@ -23,12 +23,10 @@ async fn main() {
                 longitude: 1.722,
                 distance_filter: None,
             })),
+            additional_matches: Some(true),
             ..Default::default()
         }],
-        options: Some(Box::new(FinalDestinationOptions {
-            pretty_print: Some(true),
-            ..Default::default()
-        })),
+        options: None,
     };
 
     let client = Client::new();

@@ -13,8 +13,8 @@ from ..types import UNSET, Unset
 from typing import cast
 
 if TYPE_CHECKING:
-  from ..models.final_destination_query import FinalDestinationQuery
   from ..models.final_destination_hit import FinalDestinationHit
+  from ..models.final_destination_query import FinalDestinationQuery
 
 
 
@@ -53,8 +53,8 @@ class FinalDestinationHits:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.final_destination_query import FinalDestinationQuery
         from ..models.final_destination_hit import FinalDestinationHit
+        from ..models.final_destination_query import FinalDestinationQuery
         best_match: dict[str, Any] | None
         if isinstance(self.best_match, FinalDestinationHit):
             best_match = self.best_match.to_dict()
@@ -91,8 +91,8 @@ class FinalDestinationHits:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.final_destination_query import FinalDestinationQuery
         from ..models.final_destination_hit import FinalDestinationHit
+        from ..models.final_destination_query import FinalDestinationQuery
         d = dict(src_dict)
         def _parse_best_match(data: object) -> FinalDestinationHit | None:
             if data is None:

@@ -1,8 +1,9 @@
 type: object
 additionalProperties: false
 properties:
-  oneOf:
-    os_uprn:
-      type: boolean
-    os_udprn:
-      type: boolean
+  os_uprn:
+    type: string
+  os_udprn:
+    type: string
+minProperties: 1
+maxProperties: 1

@@ -5,7 +5,7 @@ use naurt_api::{
         configuration::{ApiKey, Configuration},
         final_destination_api::finaldestination_post,
     },
-    models::{FinalDestinationOptions, FinalDestinationQuery, FinalDestinationRequest},
+    models::{FinalDestinationQuery, FinalDestinationRequest},
 };
 use reqwest::Client;
 
@@ -18,10 +18,7 @@ async fn main() {
             address_string: Some("47 Digby Rd, Evesham WR11 1BW".to_string()),
             ..Default::default()
         }],
-        options: Some(Box::new(FinalDestinationOptions {
-            pretty_print: Some(true),
-            ..Default::default()
-        })),
+        options: None,
     };
 
     let client = Client::new();

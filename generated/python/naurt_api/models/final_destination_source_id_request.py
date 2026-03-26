@@ -23,25 +23,31 @@ T = TypeVar("T", bound="FinalDestinationSourceIdRequest")
 class FinalDestinationSourceIdRequest:
     """ 
         Attributes:
-            one_of (Any | Unset):
+            os_uprn (str | Unset):
+            os_udprn (str | Unset):
      """
 
-    one_of: Any | Unset = UNSET
+    os_uprn: str | Unset = UNSET
+    os_udprn: str | Unset = UNSET
 
 
 
 
 
     def to_dict(self) -> dict[str, Any]:
-        one_of = self.one_of
+        os_uprn = self.os_uprn
+
+        os_udprn = self.os_udprn
 
 
         field_dict: dict[str, Any] = {}
 
         field_dict.update({
         })
-        if one_of is not UNSET:
-            field_dict["oneOf"] = one_of
+        if os_uprn is not UNSET:
+            field_dict["os_uprn"] = os_uprn
+        if os_udprn is not UNSET:
+            field_dict["os_udprn"] = os_udprn
 
         return field_dict
 
@@ -50,10 +56,13 @@ class FinalDestinationSourceIdRequest:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
-        one_of = d.pop("oneOf", UNSET)
+        os_uprn = d.pop("os_uprn", UNSET)
+
+        os_udprn = d.pop("os_udprn", UNSET)
 
         final_destination_source_id_request = cls(
-            one_of=one_of,
+            os_uprn=os_uprn,
+            os_udprn=os_udprn,
         )
 
         return final_destination_source_id_request

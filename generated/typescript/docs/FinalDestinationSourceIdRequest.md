@@ -6,7 +6,8 @@
 
 Name | Type
 ------------ | -------------
-`oneOf` | any
+`osUprn` | string
+`osUdprn` | string
 
 ## Example
 
@@ -15,7 +16,8 @@ import type { FinalDestinationSourceIdRequest } from '@naurt/api'
 
 // TODO: Update the object below with actual values
 const example = {
-  "oneOf": null,
+  "osUprn": null,
+  "osUdprn": null,
 } satisfies FinalDestinationSourceIdRequest
 
 console.log(example)

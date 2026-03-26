@@ -2,47 +2,46 @@ import { Configuration, FinalDestinationApi } from "@naurt/api";
 
 const fs = require('fs');
 
-
 const api_key = fs.readFileSync("../api.key", "utf-8");
 
-const config = new Configuration({
-    basePath: "https://api.naurt.net",
-    apiKey: async (name) => {
-        if (name === "Authorization") {
-            return api_key
-        }
-        return undefined
-    },
-});
-
-const api = new FinalDestinationApi(config);
-
 async function main() {
-    try {
-        const raw = await api.finaldestinationPostRaw({
-            finalDestinationRequest: {
-                queries: [
-                    {
-                        addressString: "447 Digby Rd, Evesham WR11 1BW",
-                    },
-                ],
-            },
-        })
+	const config = new Configuration({
+		basePath: "https://api.naurt.net",
+		apiKey: async (name) => {
+			if (name === "Authorization") {
+				return api_key
+			}
+			return undefined
+		},
+	});
 
-        const data = await raw.value()
-        console.log(JSON.stringify(data, null, 2))
+	const api = new FinalDestinationApi(config);
 
-    } catch (err) {
-        console.error("error:", err)
+	const raw = await api.finaldestinationPostRaw({
+		finalDestinationRequest: {
+			queries: [
+				{
+					addressString: "447 Digby Rd, Evesham WR11 1BW",
+				},
+			],
+		},
+	})
 
-        if (err?.response) {
-            const text = await err.response.text()
-            console.error("raw body:", text)
-        }
-    }
+	try {
+		const data = await raw.value()
+		console.log(JSON.stringify(data, null, 2))
+
+	} catch (err) {
+		console.error("error:", err)
+
+		if (err?.response) {
+			const text = await err.response.text()
+			console.error("raw body:", text)
+		}
+	}
 };
 
 main().catch((err) => {
-    console.error(err)
-    process.exit(1)
+	console.error(err)
+	process.exit(1)
 });

@@ -14,9 +14,9 @@ from uuid import UUID
 
 if TYPE_CHECKING:
   from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
+  from ..models.key_value import KeyValue
   from ..models.feature_collection import FeatureCollection
   from ..models.structured_address import StructuredAddress
-  from ..models.key_value import KeyValue
 
 
 
@@ -69,9 +69,9 @@ class FinalDestinationHit:
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
+        from ..models.key_value import KeyValue
         from ..models.feature_collection import FeatureCollection
         from ..models.structured_address import StructuredAddress
-        from ..models.key_value import KeyValue
         id = str(self.id)
 
         address = self.address
@@ -119,9 +119,9 @@ class FinalDestinationHit:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
+        from ..models.key_value import KeyValue
         from ..models.feature_collection import FeatureCollection
         from ..models.structured_address import StructuredAddress
-        from ..models.key_value import KeyValue
         d = dict(src_dict)
         id = UUID(d.pop("id"))
 

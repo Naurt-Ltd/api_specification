@@ -6,7 +6,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
   title: Naurt API
-  version: 0.1.1
+  version: 0.1.2
 servers:
 - url: https://api.naurt.net
 security:
@@ -430,13 +430,15 @@ components:
     final-destination-source-id-request:
       additionalProperties: false
       example:
-        oneOf: ""
+        os_uprn: os_uprn
+        os_udprn: os_udprn
+      maxProperties: 1
+      minProperties: 1
       properties:
-        oneOf:
-          os_uprn:
-            type: boolean
-          os_udprn:
-            type: boolean
+        os_uprn:
+          type: string
+        os_udprn:
+          type: string
     language:
       default: Auto
       description: "Used for reverse geocodes only, to decide which language the response\
@@ -481,7 +483,8 @@ components:
         language: Auto
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         source_id:
-          oneOf: ""
+          os_uprn: os_uprn
+          os_udprn: os_udprn
         address_structured:
           country: country
           country_code: AE
@@ -925,7 +928,8 @@ components:
           language: Auto
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           source_id:
-            oneOf: ""
+            os_uprn: os_uprn
+            os_udprn: os_udprn
           address_structured:
             country: country
             country_code: AE
@@ -1140,7 +1144,8 @@ components:
             language: Auto
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             source_id:
-              oneOf: ""
+              os_uprn: os_uprn
+              os_udprn: os_udprn
             address_structured:
               country: country
               country_code: AE
@@ -1307,7 +1312,8 @@ components:
             language: Auto
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             source_id:
-              oneOf: ""
+              os_uprn: os_uprn
+              os_udprn: os_udprn
             address_structured:
               country: country
               country_code: AE
