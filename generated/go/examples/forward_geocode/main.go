@@ -19,6 +19,15 @@ func main() {
 
 	api_key := string(api_key_b)
 
+	req := naurt.FinalDestinationRequest{
+		Queries: []naurt.FinalDestinationQuery{
+			{
+				AddressString: naurt.PtrString("47 Digby Rd, Evesham WR11 1BW"),
+			},
+		},
+		Options: nil,
+	}
+
 	cfg := naurt.NewConfiguration()
 	cfg.Servers = naurt.ServerConfigurations{
 		{
@@ -35,15 +44,6 @@ func main() {
 			"ApiKeyAuth": {Key: api_key, Prefix: ""}, // MUST be `ApiKeyAuth`, `Prefix: ""` is VERY important
 		},
 	)
-
-	req := naurt.FinalDestinationRequest{
-		Queries: []naurt.FinalDestinationQuery{
-			{
-				AddressString: naurt.PtrString("47 Digby Rd, Evesham WR11 1BW"),
-			},
-		},
-		Options: nil,
-	}
 
 	resp, http, err := client.FinalDestinationAPI.FinaldestinationPost(ctx).FinalDestinationRequest(req).Execute()
 

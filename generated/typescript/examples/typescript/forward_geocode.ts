@@ -30,10 +30,12 @@ async function main(): Promise<void> {
 
 	const api = new FinalDestinationApi(config);
 
+	const raw = await api.finaldestinationPostRaw({
+		finalDestinationRequest: request,
+	});
+
 	try {
-		const raw = await api.finaldestinationPostRaw({
-			finalDestinationRequest: request,
-		});
+
 
 		const data: FinalDestinationResponse = await raw.value();
 		console.log(JSON.stringify(data, null, 2));

@@ -19,10 +19,7 @@ async fn main() {
             id: Some(Uuid::from_str("8bd197aa-7328-3e10-9ea7-7ec139e9fa48").unwrap()),
             ..Default::default()
         }],
-        options: Some(Box::new(FinalDestinationOptions {
-            pretty_print: Some(true),
-            ..Default::default()
-        })),
+        options: None,
     };
 
     let client = Client::new();

@@ -7,13 +7,14 @@ API_KEY = f.read()
 f.close()
 
 def main():
+
+	query = naurt_models.FinalDestinationQuery(address_string="47 Digby Rd, Evesham WR11 1BW")
+
 	client = AuthenticatedClient(
 		base_url="https://api.naurt.net",
 		token=API_KEY,
 		prefix="" # NOTE: This is important
 	)
-
-	query = naurt_models.FinalDestinationQuery(address_string="47 Digby Rd, Evesham WR11 1BW")
 
 	request = naurt_models.FinalDestinationRequest(queries=[query])
 

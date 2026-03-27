@@ -5,6 +5,19 @@ const fs = require('fs');
 const api_key = fs.readFileSync("../api.key", "utf-8");
 
 async function main() {
+
+	const req = {
+		finalDestinationRequest: {
+			queries: [
+				{
+					sourceId: {
+						osUprn: "200001191298"
+					}
+				},
+			],
+		},
+	};
+
 	const config = new Configuration({
 		basePath: "https://api.naurt.net",
 		apiKey: async (name) => {
@@ -17,17 +30,7 @@ async function main() {
 
 	const api = new FinalDestinationApi(config);
 
-	const raw = await api.finaldestinationPostRaw({
-		finalDestinationRequest: {
-			queries: [
-				{
-					sourceId: {
-						osUprn: "200001191298"
-					}
-				},
-			],
-		},
-	})
+	const raw = await api.finaldestinationPostRaw(req);
 
 	try {
 		const data = await raw.value()

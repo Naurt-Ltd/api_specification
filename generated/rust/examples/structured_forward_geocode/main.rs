@@ -26,10 +26,7 @@ async fn main() {
             })),
             ..Default::default()
         }],
-        options: Some(Box::new(FinalDestinationOptions {
-            pretty_print: Some(true),
-            ..Default::default()
-        })),
+        options: None,
     };
 
     let client = Client::new();

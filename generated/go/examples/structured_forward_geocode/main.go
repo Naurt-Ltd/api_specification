@@ -17,6 +17,20 @@ func main() {
 		panic(err)
 	}
 
+	req := naurt.FinalDestinationRequest{
+		Queries: []naurt.FinalDestinationQuery{
+			{
+				AddressStructured: &naurt.StructuredAddress{
+					Postalcode:   naurt.PtrString("10013"),
+					StreetName:   naurt.PtrString("Broome Street"),
+					StreetNumber: naurt.PtrString("489"),
+					City:         naurt.PtrString("New York"),
+				},
+			},
+		},
+		Options: nil,
+	}
+
 	api_key := string(api_key_b)
 
 	cfg := naurt.NewConfiguration()
@@ -36,19 +50,7 @@ func main() {
 		},
 	)
 
-	req := naurt.FinalDestinationRequest{
-		Queries: []naurt.FinalDestinationQuery{
-			{
-				AddressStructured: &naurt.StructuredAddress{
-					Postalcode:   naurt.PtrString("10013"),
-					StreetName:   naurt.PtrString("Broome Street"),
-					StreetNumber: naurt.PtrString("489"),
-					City:         naurt.PtrString("New York"),
-				},
-			},
-		},
-		Options: nil,
-	}
+
 
 	resp, http, err := client.FinalDestinationAPI.FinaldestinationPost(ctx).FinalDestinationRequest(req).Execute()
 

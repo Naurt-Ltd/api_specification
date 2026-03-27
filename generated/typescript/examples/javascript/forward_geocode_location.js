@@ -5,6 +5,21 @@ const fs = require('fs');
 const api_key = fs.readFileSync("../api.key", "utf-8");
 
 async function main() {
+
+	let req = {
+		finalDestinationRequest: {
+			queries: [
+				{
+					addressString: "447 Digby Rd, Evesham WR11 1BW",
+					location: {
+						latitude: 52.09,
+						longitude: -1.94
+					}
+				},
+			],
+		},
+	};
+
 	const config = new Configuration({
 		basePath: "https://api.naurt.net",
 		apiKey: async (name) => {
@@ -17,19 +32,7 @@ async function main() {
 
 	const api = new FinalDestinationApi(config);
 
-	const raw = await api.finaldestinationPostRaw({
-		finalDestinationRequest: {
-			queries: [
-				{
-					addressString: "447 Digby Rd, Evesham WR11 1BW",
-					location: {
-						latitude: 52.09,
-						longitude: -1.94
-					}
-				},
-			],
-		},
-	})
+	const raw = await api.finaldestinationPostRaw(req);
 
 	try {
 		const data = await raw.value()
