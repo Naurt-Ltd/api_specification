@@ -13,6 +13,7 @@ Name | Type
 `geojsonType` | [GeojsonType](GeojsonType.md)
 `returnOriginal` | boolean
 `inputFilter` | [InputFilter](InputFilter.md)
+`sourceId` | [SourceIdRequest](SourceIdRequest.md)
 
 ## Example
 
@@ -27,6 +28,7 @@ const example = {
   "geojsonType": null,
   "returnOriginal": null,
   "inputFilter": null,
+  "sourceId": null,
 } satisfies FinalDestinationOptions
 
 console.log(example)

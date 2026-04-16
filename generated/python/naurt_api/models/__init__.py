@@ -42,6 +42,7 @@ from .rendezvous_options import RendezvousOptions
 from .rendezvous_query import RendezvousQuery
 from .rendezvous_request import RendezvousRequest
 from .rendezvous_response import RendezvousResponse
+from .source_id_request import SourceIdRequest
 from .structured_address import StructuredAddress
 
 __all__ = (
@@ -87,5 +88,6 @@ __all__ = (
     "RendezvousQuery",
     "RendezvousRequest",
     "RendezvousResponse",
+    "SourceIdRequest",
     "StructuredAddress",
 )

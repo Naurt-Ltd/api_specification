@@ -36,4 +36,5 @@ export * from './RendezvousHitData';
 export * from './RendezvousQuery';
 export * from './RendezvousRequest';
 export * from './RendezvousResponse';
+export * from './SourceIdRequest';
 export * from './StructuredAddress';

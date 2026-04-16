@@ -15,26 +15,23 @@ from ..types import UNSET, Unset
 
 
 
-T = TypeVar("T", bound="FinalDestinationSourceIdResponse")
+T = TypeVar("T", bound="SourceIdRequest")
 
 
 
 @_attrs_define
-class FinalDestinationSourceIdResponse:
-    """ An object containing information on source IDs. Source IDs refer to underlying
-    IDs from address data sets. Currently supporting UPRN and UDPRN in the UK
-    referring to the OrdnanceSurvey datasets
-
-        Example:
-            {'os_uprn': '100062664604'}
+class SourceIdRequest:
+    """ Use this to request that Naurt returns a source ID for the addresses. Note that
+    if a requested source ID is not available for that address, this option will
+    be ignored.
 
         Attributes:
-            os_uprn (str | Unset):
-            os_udprn (str | Unset):
+            os_uprn (bool | Unset):
+            os_udprn (bool | Unset):
      """
 
-    os_uprn: str | Unset = UNSET
-    os_udprn: str | Unset = UNSET
+    os_uprn: bool | Unset = UNSET
+    os_udprn: bool | Unset = UNSET
 
 
 
@@ -66,10 +63,10 @@ class FinalDestinationSourceIdResponse:
 
         os_udprn = d.pop("os_udprn", UNSET)
 
-        final_destination_source_id_response = cls(
+        source_id_request = cls(
             os_uprn=os_uprn,
             os_udprn=os_udprn,
         )
 
-        return final_destination_source_id_response
+        return source_id_request
 

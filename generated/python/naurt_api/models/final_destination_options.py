@@ -11,7 +11,10 @@ from ..types import UNSET, Unset
 from ..models.geojson_type import GeojsonType
 from ..models.input_filter import InputFilter
 from ..types import UNSET, Unset
+from typing import cast
 
+if TYPE_CHECKING:
+  from ..models.source_id_request import SourceIdRequest
 
 
 
@@ -52,6 +55,10 @@ class FinalDestinationOptions:
 
                 `strict` is our strictest, and only allows searches which are likely to
                 produce good matches
+            source_id (SourceIdRequest | Unset): Use this to request that Naurt returns a source ID for the addresses. Note
+                that
+                if a requested source ID is not available for that address, this option will
+                be ignored.
      """
 
     pretty_print: bool | Unset = False
@@ -60,12 +67,14 @@ class FinalDestinationOptions:
     geojson_type: GeojsonType | Unset = UNSET
     return_original: bool | Unset = False
     input_filter: InputFilter | Unset = UNSET
+    source_id: SourceIdRequest | Unset = UNSET
 
 
 
 
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.source_id_request import SourceIdRequest
         pretty_print = self.pretty_print
 
         verbose = self.verbose
@@ -84,6 +93,10 @@ class FinalDestinationOptions:
             input_filter = self.input_filter.value
 
 
+        source_id: dict[str, Any] | Unset = UNSET
+        if not isinstance(self.source_id, Unset):
+            source_id = self.source_id.to_dict()
+
 
         field_dict: dict[str, Any] = {}
 
@@ -101,6 +114,8 @@ class FinalDestinationOptions:
             field_dict["return_original"] = return_original
         if input_filter is not UNSET:
             field_dict["input_filter"] = input_filter
+        if source_id is not UNSET:
+            field_dict["source_id"] = source_id
 
         return field_dict
 
@@ -108,6 +123,7 @@ class FinalDestinationOptions:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.source_id_request import SourceIdRequest
         d = dict(src_dict)
         pretty_print = d.pop("pretty_print", UNSET)
 
@@ -137,6 +153,16 @@ class FinalDestinationOptions:
 
 
 
+        _source_id = d.pop("source_id", UNSET)
+        source_id: SourceIdRequest | Unset
+        if isinstance(_source_id,  Unset):
+            source_id = UNSET
+        else:
+            source_id = SourceIdRequest.from_dict(_source_id)
+
+
+
+
         final_destination_options = cls(
             pretty_print=pretty_print,
             verbose=verbose,
@@ -144,6 +170,7 @@ class FinalDestinationOptions:
             geojson_type=geojson_type,
             return_original=return_original,
             input_filter=input_filter,
+            source_id=source_id,
         )
 
         return final_destination_options

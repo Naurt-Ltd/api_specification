@@ -12,8 +12,8 @@ from ..types import UNSET, Unset
 from typing import cast
 
 if TYPE_CHECKING:
-  from ..models.final_destination_query import FinalDestinationQuery
   from ..models.final_destination_options import FinalDestinationOptions
+  from ..models.final_destination_query import FinalDestinationQuery
 
 
 
@@ -41,8 +41,8 @@ class FinalDestinationRequest:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.final_destination_query import FinalDestinationQuery
         from ..models.final_destination_options import FinalDestinationOptions
+        from ..models.final_destination_query import FinalDestinationQuery
         queries = []
         for queries_item_data in self.queries:
             queries_item = queries_item_data.to_dict()
@@ -69,8 +69,8 @@ class FinalDestinationRequest:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.final_destination_query import FinalDestinationQuery
         from ..models.final_destination_options import FinalDestinationOptions
+        from ..models.final_destination_query import FinalDestinationQuery
         d = dict(src_dict)
         queries = []
         _queries = d.pop("queries")

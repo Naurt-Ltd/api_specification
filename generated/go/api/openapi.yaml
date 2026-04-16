@@ -6,7 +6,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
   title: Naurt API
-  version: 0.1.2
+  version: 0.1.3
 servers:
 - url: https://api.naurt.net
 security:
@@ -541,6 +541,16 @@ components:
       - loose
       - strict
       type: string
+    source-id-request:
+      additionalProperties: false
+      description: "Use this to request that Naurt returns a source ID for the addresses.\
+        \ Note that \nif a requested source ID is not available for that address,\
+        \ this option will \nbe ignored.\n"
+      properties:
+        os_uprn:
+          type: boolean
+        os_udprn:
+          type: boolean
     final-destination-options:
       additionalProperties: false
       description: |
@@ -571,6 +581,8 @@ components:
           type: boolean
         input_filter:
           $ref: "#/components/schemas/input-filter"
+        source_id:
+          $ref: "#/components/schemas/source-id-request"
       ype: object
     final-destination-request:
       additionalProperties: false
@@ -793,12 +805,7 @@ components:
         \ to underlying\nIDs from address data sets. Currently supporting UPRN and\
         \ UDPRN in the UK \nreferring to the OrdnanceSurvey datasets\n"
       example:
-        UPRN:
-          value:
-            os_uprn: "100062664604"
-        UDPRN:
-          value:
-            os_udprn: "25962203"
+        os_uprn: "100062664604"
       properties:
         os_uprn:
           type: string
@@ -859,12 +866,7 @@ components:
         search_confidence: 0.93
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         source_id:
-          UPRN:
-            value:
-              os_uprn: "100062664604"
-          UDPRN:
-            value:
-              os_udprn: "25962203"
+          os_uprn: "100062664604"
         structured_response:
           country: country
           country_code: AE
@@ -997,12 +999,7 @@ components:
           search_confidence: 0.93
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           source_id:
-            UPRN:
-              value:
-                os_uprn: "100062664604"
-            UDPRN:
-              value:
-                os_udprn: "25962203"
+            os_uprn: "100062664604"
           structured_response:
             country: country
             country_code: AE
@@ -1067,12 +1064,7 @@ components:
           search_confidence: 0.93
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           source_id:
-            UPRN:
-              value:
-                os_uprn: "100062664604"
-            UDPRN:
-              value:
-                os_udprn: "25962203"
+            os_uprn: "100062664604"
           structured_response:
             country: country
             country_code: AE
@@ -1213,12 +1205,7 @@ components:
             search_confidence: 0.93
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             source_id:
-              UPRN:
-                value:
-                  os_uprn: "100062664604"
-              UDPRN:
-                value:
-                  os_udprn: "25962203"
+              os_uprn: "100062664604"
             structured_response:
               country: country
               country_code: AE
@@ -1283,12 +1270,7 @@ components:
             search_confidence: 0.93
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             source_id:
-              UPRN:
-                value:
-                  os_uprn: "100062664604"
-              UDPRN:
-                value:
-                  os_udprn: "25962203"
+              os_uprn: "100062664604"
             structured_response:
               country: country
               country_code: AE
@@ -1381,12 +1363,7 @@ components:
             search_confidence: 0.93
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             source_id:
-              UPRN:
-                value:
-                  os_uprn: "100062664604"
-              UDPRN:
-                value:
-                  os_udprn: "25962203"
+              os_uprn: "100062664604"
             structured_response:
               country: country
               country_code: AE
@@ -1451,12 +1428,7 @@ components:
             search_confidence: 0.93
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             source_id:
-              UPRN:
-                value:
-                  os_uprn: "100062664604"
-              UDPRN:
-                value:
-                  os_udprn: "25962203"
+              os_uprn: "100062664604"
             structured_response:
               country: country
               country_code: AE

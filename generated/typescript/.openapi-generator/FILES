@@ -40,6 +40,7 @@ docs/RendezvousHitData.md
 docs/RendezvousQuery.md
 docs/RendezvousRequest.md
 docs/RendezvousResponse.md
+docs/SourceIdRequest.md
 docs/StructuredAddress.md
 package.json
 src/apis/FeedbackApi.ts
@@ -83,6 +84,7 @@ src/models/RendezvousHitData.ts
 src/models/RendezvousQuery.ts
 src/models/RendezvousRequest.ts
 src/models/RendezvousResponse.ts
+src/models/SourceIdRequest.ts
 src/models/StructuredAddress.ts
 src/models/index.ts
 src/runtime.ts

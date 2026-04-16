@@ -15,9 +15,9 @@ from typing import cast
 from uuid import UUID
 
 if TYPE_CHECKING:
-  from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
   from ..models.final_destination_location import FinalDestinationLocation
   from ..models.structured_address import StructuredAddress
+  from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
 
 
 
@@ -76,9 +76,9 @@ class FinalDestinationQuery:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
         from ..models.final_destination_location import FinalDestinationLocation
         from ..models.structured_address import StructuredAddress
+        from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
         address_string = self.address_string
 
         address_structured: dict[str, Any] | Unset = UNSET
@@ -137,9 +137,9 @@ class FinalDestinationQuery:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
         from ..models.final_destination_location import FinalDestinationLocation
         from ..models.structured_address import StructuredAddress
+        from ..models.final_destination_source_id_request import FinalDestinationSourceIdRequest
         d = dict(src_dict)
         address_string = d.pop("address_string", UNSET)
 

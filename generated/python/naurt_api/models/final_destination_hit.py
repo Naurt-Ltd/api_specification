@@ -13,10 +13,10 @@ from typing import cast
 from uuid import UUID
 
 if TYPE_CHECKING:
-  from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
-  from ..models.key_value import KeyValue
   from ..models.feature_collection import FeatureCollection
+  from ..models.key_value import KeyValue
   from ..models.structured_address import StructuredAddress
+  from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
 
 
 
@@ -52,7 +52,7 @@ class FinalDestinationHit:
                 refer to underlying
                 IDs from address data sets. Currently supporting UPRN and UDPRN in the UK
                 referring to the OrdnanceSurvey datasets
-                 Example: {'UPRN': {'value': {'os_uprn': '100062664604'}}, 'UDPRN': {'value': {'os_udprn': '25962203'}}}.
+                 Example: {'os_uprn': '100062664604'}.
      """
 
     id: UUID
@@ -68,10 +68,10 @@ class FinalDestinationHit:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
-        from ..models.key_value import KeyValue
         from ..models.feature_collection import FeatureCollection
+        from ..models.key_value import KeyValue
         from ..models.structured_address import StructuredAddress
+        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
         id = str(self.id)
 
         address = self.address
@@ -118,10 +118,10 @@ class FinalDestinationHit:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
-        from ..models.key_value import KeyValue
         from ..models.feature_collection import FeatureCollection
+        from ..models.key_value import KeyValue
         from ..models.structured_address import StructuredAddress
+        from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
         d = dict(src_dict)
         id = UUID(d.pop("id"))
 

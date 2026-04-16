@@ -45,6 +45,7 @@ docs/RendezvousHitData.md
 docs/RendezvousQuery.md
 docs/RendezvousRequest.md
 docs/RendezvousResponse.md
+docs/SourceIdRequest.md
 docs/StructuredAddress.md
 go.mod
 go.sum
@@ -84,6 +85,7 @@ model_rendezvous_hit_data.go
 model_rendezvous_query.go
 model_rendezvous_request.go
 model_rendezvous_response.go
+model_source_id_request.go
 model_structured_address.go
 response.go
 utils.go

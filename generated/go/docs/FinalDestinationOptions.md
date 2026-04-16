@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **GeojsonType** | Pointer to [**GeojsonType**](GeojsonType.md) |  | [optional] [default to GEOJSONTYPE_GEOJSON]
 **ReturnOriginal** | Pointer to **bool** | Returns your original query back in the response  | [optional] [default to false]
 **InputFilter** | Pointer to [**InputFilter**](InputFilter.md) |  | [optional] [default to INPUTFILTER_LOOSE]
+**SourceId** | Pointer to [**SourceIdRequest**](SourceIdRequest.md) |  | [optional] 
 
 ## Methods
 
@@ -179,6 +180,31 @@ SetInputFilter sets InputFilter field to given value.
 `func (o *FinalDestinationOptions) HasInputFilter() bool`
 
 HasInputFilter returns a boolean if a field has been set.
+
+### GetSourceId
+
+`func (o *FinalDestinationOptions) GetSourceId() SourceIdRequest`
+
+GetSourceId returns the SourceId field if non-nil, zero value otherwise.
+
+### GetSourceIdOk
+
+`func (o *FinalDestinationOptions) GetSourceIdOk() (*SourceIdRequest, bool)`
+
+GetSourceIdOk returns a tuple with the SourceId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSourceId
+
+`func (o *FinalDestinationOptions) SetSourceId(v SourceIdRequest)`
+
+SetSourceId sets SourceId field to given value.
+
+### HasSourceId
+
+`func (o *FinalDestinationOptions) HasSourceId() bool`
+
+HasSourceId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

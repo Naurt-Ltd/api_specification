@@ -12,8 +12,8 @@ from ..types import UNSET, Unset
 from typing import cast
 
 if TYPE_CHECKING:
-  from ..models.rendezvous_options import RendezvousOptions
   from ..models.rendezvous_query import RendezvousQuery
+  from ..models.rendezvous_options import RendezvousOptions
 
 
 
@@ -40,8 +40,8 @@ class RendezvousRequest:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.rendezvous_options import RendezvousOptions
         from ..models.rendezvous_query import RendezvousQuery
+        from ..models.rendezvous_options import RendezvousOptions
         queries = []
         for queries_item_data in self.queries:
             queries_item = queries_item_data.to_dict()
@@ -68,8 +68,8 @@ class RendezvousRequest:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.rendezvous_options import RendezvousOptions
         from ..models.rendezvous_query import RendezvousQuery
+        from ..models.rendezvous_options import RendezvousOptions
         d = dict(src_dict)
         queries = []
         _queries = d.pop("queries")

@@ -12,8 +12,8 @@ from ..types import UNSET, Unset
 from typing import cast
 
 if TYPE_CHECKING:
-  from ..models.polygon import Polygon
   from ..models.multipoint import Multipoint
+  from ..models.polygon import Polygon
   from ..models.point import Point
 
 
@@ -45,8 +45,8 @@ class KeyValue:
 
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.polygon import Polygon
         from ..models.multipoint import Multipoint
+        from ..models.polygon import Polygon
         from ..models.point import Point
         default_geocode = self.default_geocode.to_dict()
 
@@ -81,8 +81,8 @@ class KeyValue:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.polygon import Polygon
         from ..models.multipoint import Multipoint
+        from ..models.polygon import Polygon
         from ..models.point import Point
         d = dict(src_dict)
         default_geocode = Point.from_dict(d.pop("default_geocode"))
