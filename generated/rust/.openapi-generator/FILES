@@ -40,6 +40,7 @@ docs/RendezvousHitData.md
 docs/RendezvousQuery.md
 docs/RendezvousRequest.md
 docs/RendezvousResponse.md
+docs/SourceIdRequest.md
 docs/StructuredAddress.md
 src/apis/configuration.rs
 src/apis/feedback_api.rs
@@ -84,4 +85,5 @@ src/models/rendezvous_hit_data.rs
 src/models/rendezvous_query.rs
 src/models/rendezvous_request.rs
 src/models/rendezvous_response.rs
+src/models/source_id_request.rs
 src/models/structured_address.rs

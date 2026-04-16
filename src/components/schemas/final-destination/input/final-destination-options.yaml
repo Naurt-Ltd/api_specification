@@ -29,3 +29,5 @@ properties:
       Returns your original query back in the response
   input_filter:
     $ref: "./../../general/input-filter.yaml"
+  source_id:
+    $ref: "./../../general/source-id-request.yaml"

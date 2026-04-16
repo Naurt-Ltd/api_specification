@@ -30,6 +30,8 @@ pub struct FinalDestinationOptions {
     pub return_original: Option<bool>,
     #[serde(rename = "input_filter", skip_serializing_if = "Option::is_none")]
     pub input_filter: Option<models::InputFilter>,
+    #[serde(rename = "source_id", skip_serializing_if = "Option::is_none")]
+    pub source_id: Option<Box<models::SourceIdRequest>>,
 }
 
 impl FinalDestinationOptions {
@@ -42,6 +44,7 @@ impl FinalDestinationOptions {
             geojson_type: None,
             return_original: None,
             input_filter: None,
+            source_id: None,
         }
     }
 }

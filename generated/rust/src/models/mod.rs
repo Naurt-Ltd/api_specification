@@ -70,5 +70,7 @@ pub mod rendezvous_request;
 pub use self::rendezvous_request::RendezvousRequest;
 pub mod rendezvous_response;
 pub use self::rendezvous_response::RendezvousResponse;
+pub mod source_id_request;
+pub use self::source_id_request::SourceIdRequest;
 pub mod structured_address;
 pub use self::structured_address::StructuredAddress;

@@ -523,6 +523,18 @@ components:
         - loose
         - strict
       default: loose
+    source-id-request:
+      description: |
+        Use this to request that Naurt returns a source ID for the addresses. Note that 
+        if a requested source ID is not available for that address, this option will 
+        be ignored.
+      type: object
+      additionalProperties: false
+      properties:
+        os_uprn:
+          type: boolean
+        os_udprn:
+          type: boolean
     final-destination-options:
       description: |
         `options` impact all `queries` within a request
@@ -555,6 +567,8 @@ components:
             Returns your original query back in the response
         input_filter:
           $ref: '#/components/schemas/input-filter'
+        source_id:
+          $ref: '#/components/schemas/source-id-request'
     final-destination-request:
       description: |
         A single request to the API, which can contain up to 200 queries. Each query 
@@ -722,12 +736,7 @@ components:
         IDs from address data sets. Currently supporting UPRN and UDPRN in the UK 
         referring to the OrdnanceSurvey datasets
       example:
-        UPRN:
-          value:
-            os_uprn: '100062664604'
-        UDPRN:
-          value:
-            os_udprn: '25962203'
+        os_uprn: '100062664604'
       type: object
       additionalProperties: false
       properties:

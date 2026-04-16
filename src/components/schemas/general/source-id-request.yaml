@@ -1,0 +1,11 @@
+description: |
+  Use this to request that Naurt returns a source ID for the addresses. Note that 
+  if a requested source ID is not available for that address, this option will 
+  be ignored.
+type: object
+additionalProperties: false
+properties:
+  os_uprn:
+    type: boolean
+  os_udprn:
+    type: boolean

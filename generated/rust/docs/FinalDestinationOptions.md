@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **geojson_type** | Option<[**models::GeojsonType**](GeojsonType.md)> |  | [optional]
 **return_original** | Option<**bool**> | Returns your original query back in the response  | [optional][default to false]
 **input_filter** | Option<[**models::InputFilter**](InputFilter.md)> |  | [optional]
+**source_id** | Option<[**models::SourceIdRequest**](SourceIdRequest.md)> |  | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
