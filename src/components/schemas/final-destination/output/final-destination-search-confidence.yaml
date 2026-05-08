@@ -1,6 +1,6 @@
 description: |
   Confidence score in the range 0.0 to 1.0 indicating how well the result 
-  matches the query. Higher is better.
+  matches the query. Higher is better. This is closely linked to match_level.
 
   See: https://docs.naurt.com/reference/search-confidence
 
