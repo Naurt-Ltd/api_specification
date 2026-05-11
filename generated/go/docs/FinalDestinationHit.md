@@ -8,7 +8,8 @@ Name | Type | Description | Notes
 **Address** | **string** |  | 
 **Geojson** | [**FinalDestinationHitGeojson**](FinalDestinationHitGeojson.md) |  | 
 **Distance** | Pointer to **float32** |  | [optional] 
-**SearchConfidence** | Pointer to **float64** | Confidence score in the range 0.0 to 1.0 indicating how well the result  matches the query. Higher is better.  See: https://docs.naurt.com/reference/search-confidence  Not to be confused with Accuracy, which is how good the data itself is. This  is about the likelihood of a good match.  | [optional] 
+**SearchConfidence** | Pointer to **float64** | Confidence score in the range 0.0 to 1.0 indicating how well the result  matches the query. Higher is better. This is closely linked to match_level.  See: https://docs.naurt.com/reference/search-confidence  Not to be confused with Accuracy, which is how good the data itself is. This  is about the likelihood of a good match.  | [optional] 
+**MatchLevel** | Pointer to [**FinalDestinationMatchLevel**](FinalDestinationMatchLevel.md) |  | [optional] 
 **StructuredResponse** | Pointer to [**StructuredAddress**](StructuredAddress.md) |  | [optional] 
 **SourceId** | Pointer to [**FinalDestinationSourceIdResponse**](FinalDestinationSourceIdResponse.md) |  | [optional] 
 
@@ -140,6 +141,31 @@ SetSearchConfidence sets SearchConfidence field to given value.
 `func (o *FinalDestinationHit) HasSearchConfidence() bool`
 
 HasSearchConfidence returns a boolean if a field has been set.
+
+### GetMatchLevel
+
+`func (o *FinalDestinationHit) GetMatchLevel() FinalDestinationMatchLevel`
+
+GetMatchLevel returns the MatchLevel field if non-nil, zero value otherwise.
+
+### GetMatchLevelOk
+
+`func (o *FinalDestinationHit) GetMatchLevelOk() (*FinalDestinationMatchLevel, bool)`
+
+GetMatchLevelOk returns a tuple with the MatchLevel field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMatchLevel
+
+`func (o *FinalDestinationHit) SetMatchLevel(v FinalDestinationMatchLevel)`
+
+SetMatchLevel sets MatchLevel field to given value.
+
+### HasMatchLevel
+
+`func (o *FinalDestinationHit) HasMatchLevel() bool`
+
+HasMatchLevel returns a boolean if a field has been set.
 
 ### GetStructuredResponse
 

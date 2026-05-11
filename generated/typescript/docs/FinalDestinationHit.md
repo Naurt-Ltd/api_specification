@@ -11,6 +11,7 @@ Name | Type
 `geojson` | [FinalDestinationHitGeojson](FinalDestinationHitGeojson.md)
 `distance` | number
 `searchConfidence` | number
+`matchLevel` | [FinalDestinationMatchLevel](FinalDestinationMatchLevel.md)
 `structuredResponse` | [StructuredAddress](StructuredAddress.md)
 `sourceId` | [FinalDestinationSourceIdResponse](FinalDestinationSourceIdResponse.md)
 
@@ -26,6 +27,7 @@ const example = {
   "geojson": null,
   "distance": null,
   "searchConfidence": 0.93,
+  "matchLevel": null,
   "structuredResponse": null,
   "sourceId": null,
 } satisfies FinalDestinationHit

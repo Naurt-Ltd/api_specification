@@ -8,15 +8,16 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
+from ..models.final_destination_match_level import FinalDestinationMatchLevel
 from ..types import UNSET, Unset
 from typing import cast
 from uuid import UUID
 
 if TYPE_CHECKING:
   from ..models.feature_collection import FeatureCollection
-  from ..models.key_value import KeyValue
   from ..models.structured_address import StructuredAddress
   from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
+  from ..models.key_value import KeyValue
 
 
 
@@ -35,13 +36,24 @@ class FinalDestinationHit:
             geojson (FeatureCollection | KeyValue):
             distance (float | Unset):
             search_confidence (float | Unset): Confidence score in the range 0.0 to 1.0 indicating how well the result
-                matches the query. Higher is better.
+                matches the query. Higher is better. This is closely linked to match_level.
 
                 See: https://docs.naurt.com/reference/search-confidence
 
                 Not to be confused with Accuracy, which is how good the data itself is. This
                 is about the likelihood of a good match.
                  Example: 0.93.
+            match_level (FinalDestinationMatchLevel | Unset): Match level describing the geographical level to which an
+                address has been matched.
+
+                It can be one of the following:
+
+                  - Unit
+                  - StreetNumber
+                  - Street
+                  - Postalcode
+
+                See: http://localhost:4321/reference/search-confidence/
             structured_response (StructuredAddress | Unset): Naurt's own format for structured address data. Please see:
                 https://docs.naurt.com/reference/address-structure/ for significant more
                 details on this data format.
@@ -60,6 +72,7 @@ class FinalDestinationHit:
     geojson: FeatureCollection | KeyValue
     distance: float | Unset = UNSET
     search_confidence: float | Unset = UNSET
+    match_level: FinalDestinationMatchLevel | Unset = UNSET
     structured_response: StructuredAddress | Unset = UNSET
     source_id: FinalDestinationSourceIdResponse | Unset = UNSET
 
@@ -69,9 +82,9 @@ class FinalDestinationHit:
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.feature_collection import FeatureCollection
-        from ..models.key_value import KeyValue
         from ..models.structured_address import StructuredAddress
         from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
+        from ..models.key_value import KeyValue
         id = str(self.id)
 
         address = self.address
@@ -86,6 +99,11 @@ class FinalDestinationHit:
         distance = self.distance
 
         search_confidence = self.search_confidence
+
+        match_level: str | Unset = UNSET
+        if not isinstance(self.match_level, Unset):
+            match_level = self.match_level.value
+
 
         structured_response: dict[str, Any] | Unset = UNSET
         if not isinstance(self.structured_response, Unset):
@@ -107,6 +125,8 @@ class FinalDestinationHit:
             field_dict["distance"] = distance
         if search_confidence is not UNSET:
             field_dict["search_confidence"] = search_confidence
+        if match_level is not UNSET:
+            field_dict["match_level"] = match_level
         if structured_response is not UNSET:
             field_dict["structured_response"] = structured_response
         if source_id is not UNSET:
@@ -119,9 +139,9 @@ class FinalDestinationHit:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.feature_collection import FeatureCollection
-        from ..models.key_value import KeyValue
         from ..models.structured_address import StructuredAddress
         from ..models.final_destination_source_id_response import FinalDestinationSourceIdResponse
+        from ..models.key_value import KeyValue
         d = dict(src_dict)
         id = UUID(d.pop("id"))
 
@@ -156,6 +176,16 @@ class FinalDestinationHit:
 
         search_confidence = d.pop("search_confidence", UNSET)
 
+        _match_level = d.pop("match_level", UNSET)
+        match_level: FinalDestinationMatchLevel | Unset
+        if isinstance(_match_level,  Unset):
+            match_level = UNSET
+        else:
+            match_level = FinalDestinationMatchLevel(_match_level)
+
+
+
+
         _structured_response = d.pop("structured_response", UNSET)
         structured_response: StructuredAddress | Unset
         if isinstance(_structured_response,  Unset):
@@ -182,6 +212,7 @@ class FinalDestinationHit:
             geojson=geojson,
             distance=distance,
             search_confidence=search_confidence,
+            match_level=match_level,
             structured_response=structured_response,
             source_id=source_id,
         )

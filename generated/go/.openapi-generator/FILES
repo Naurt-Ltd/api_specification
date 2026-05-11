@@ -24,6 +24,7 @@ docs/FinalDestinationHitGeojson.md
 docs/FinalDestinationHits.md
 docs/FinalDestinationLocation.md
 docs/FinalDestinationLogging.md
+docs/FinalDestinationMatchLevel.md
 docs/FinalDestinationOptions.md
 docs/FinalDestinationQuery.md
 docs/FinalDestinationRequest.md
@@ -65,6 +66,7 @@ model_final_destination_hit_geojson.go
 model_final_destination_hits.go
 model_final_destination_location.go
 model_final_destination_logging.go
+model_final_destination_match_level.go
 model_final_destination_options.go
 model_final_destination_query.go
 model_final_destination_request.go

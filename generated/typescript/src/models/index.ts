@@ -16,6 +16,7 @@ export * from './FinalDestinationHitGeojson';
 export * from './FinalDestinationHits';
 export * from './FinalDestinationLocation';
 export * from './FinalDestinationLogging';
+export * from './FinalDestinationMatchLevel';
 export * from './FinalDestinationOptions';
 export * from './FinalDestinationQuery';
 export * from './FinalDestinationRequest';

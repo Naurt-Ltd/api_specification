@@ -18,6 +18,7 @@ from .final_destination_hit import FinalDestinationHit
 from .final_destination_hits import FinalDestinationHits
 from .final_destination_location import FinalDestinationLocation
 from .final_destination_logging import FinalDestinationLogging
+from .final_destination_match_level import FinalDestinationMatchLevel
 from .final_destination_options import FinalDestinationOptions
 from .final_destination_query import FinalDestinationQuery
 from .final_destination_request import FinalDestinationRequest
@@ -64,6 +65,7 @@ __all__ = (
     "FinalDestinationHits",
     "FinalDestinationLocation",
     "FinalDestinationLogging",
+    "FinalDestinationMatchLevel",
     "FinalDestinationOptions",
     "FinalDestinationQuery",
     "FinalDestinationRequest",
