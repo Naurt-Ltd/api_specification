@@ -19,6 +19,8 @@ properties:
     type: number
   search_confidence:
     $ref: "./final-destination-search-confidence.yaml"
+  match_level:
+    $ref: "./final-destination-match-level.yaml"
   structured_response:
     $ref: "./../../general/structured-address.yaml"
   source_id:

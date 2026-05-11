@@ -1,0 +1,14 @@
+description: |
+  Match level describing the geographical level to which an address has been matched.
+  
+  It can be one of the following:
+
+    - Unit
+    - StreetNumber
+    - Street
+    - Postalcode
+
+  See: http://localhost:4321/reference/search-confidence/
+
+type: string
+enum: [Unit, StreetNumber, Street, Postalcode]

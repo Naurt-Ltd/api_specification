@@ -719,7 +719,7 @@ components:
     final-destination-search-confidence:
       description: |
         Confidence score in the range 0.0 to 1.0 indicating how well the result 
-        matches the query. Higher is better.
+        matches the query. Higher is better. This is closely linked to match_level.
 
         See: https://docs.naurt.com/reference/search-confidence
 
@@ -730,6 +730,24 @@ components:
       format: double
       minimum: 0
       maximum: 1
+    final-destination-match-level:
+      description: |
+        Match level describing the geographical level to which an address has been matched.
+
+        It can be one of the following:
+
+          - Unit
+          - StreetNumber
+          - Street
+          - Postalcode
+
+        See: http://localhost:4321/reference/search-confidence/
+      type: string
+      enum:
+        - Unit
+        - StreetNumber
+        - Street
+        - Postalcode
     final-destination-source-id-response:
       description: |
         An object containing information on source IDs. Source IDs refer to underlying
@@ -766,6 +784,8 @@ components:
           type: number
         search_confidence:
           $ref: '#/components/schemas/final-destination-search-confidence'
+        match_level:
+          $ref: '#/components/schemas/final-destination-match-level'
         structured_response:
           $ref: '#/components/schemas/structured-address'
         source_id:
