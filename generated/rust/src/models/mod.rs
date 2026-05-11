@@ -30,6 +30,8 @@ pub mod final_destination_location;
 pub use self::final_destination_location::FinalDestinationLocation;
 pub mod final_destination_logging;
 pub use self::final_destination_logging::FinalDestinationLogging;
+pub mod final_destination_match_level;
+pub use self::final_destination_match_level::FinalDestinationMatchLevel;
 pub mod final_destination_options;
 pub use self::final_destination_options::FinalDestinationOptions;
 pub mod final_destination_query;
