@@ -11,8 +11,8 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
-/// InputFilter : Input filtering helps when you have addresses from sources you can't control. Sometimes, providers might miss out on important parts of addresses, like a street number or postcode. If Naurt detects that an address is missing too  many fields to be likely to give a good match, it can be rejected by this  feature  `none` turns this feature off and does not do any input filtering. This may  result in some poor responses  `loose` is the default - it does filter out some poor inputs but allows some  missing fields   `strict` is our strictest, and only allows searches which are likely to produce good matches 
-/// Input filtering helps when you have addresses from sources you can't control. Sometimes, providers might miss out on important parts of addresses, like a street number or postcode. If Naurt detects that an address is missing too  many fields to be likely to give a good match, it can be rejected by this  feature  `none` turns this feature off and does not do any input filtering. This may  result in some poor responses  `loose` is the default - it does filter out some poor inputs but allows some  missing fields   `strict` is our strictest, and only allows searches which are likely to produce good matches 
+/// InputFilter : This field no longer does anything, as improvements in search have rendered it  redundant. This is deprecated. 
+/// This field no longer does anything, as improvements in search have rendered it  redundant. This is deprecated. 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum InputFilter {
     #[serde(rename = "none")]
